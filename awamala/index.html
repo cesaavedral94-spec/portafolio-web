@@ -70,7 +70,7 @@ nav.top{display:flex;align-items:center;justify-content:space-between;gap:12px;p
 .hero{position:relative;height:clamp(620px,max(100svh,64vw),1500px)}   /* en pantallas anchas la portada guarda la proporción */
 .hero h1{margin:0}
 .slot{position:absolute;pointer-events:none}
-.logo-slot{left:50%;top:16%;transform:translateX(-50%);width:max(min(902px,94vw),min(80.7vw,1500px));   /* crece con el ancho, igual proporción que a ~1120 px */
+.logo-slot{left:50%;top:16%;transform:translateX(-50%);width:max(min(902px,94vw),min(76.7vw,1425px));   /* crece con el ancho, igual proporción que a ~1120 px */
   aspect-ratio:6.2/1}
 .logo-fallback{display:none;text-align:center;color:var(--teal)}
 .no3d .logo-fallback{display:block}
@@ -85,16 +85,16 @@ nav.top{display:flex;align-items:center;justify-content:space-between;gap:12px;p
 .pill.ig{border:2px solid var(--teal);background:var(--ice);color:var(--teal)}
 .pill.ig:hover{background:var(--teal);color:var(--ice)}
 .sticker{position:absolute;border:2px solid var(--teal);background:var(--ice);color:var(--teal);border-radius:1600px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
-.sticker b{font:900 clamp(38px,4.65vw,84px)/.85 var(--display);font-stretch:125%}
-.sticker small{font:700 clamp(11px,1.25vw,22px)/1 var(--body);letter-spacing:.08em;margin-top:8px}
-.s-alc{width:clamp(130px,15.2vw,270px);height:clamp(130px,15.2vw,270px);left:30%;top:52%;transform:translateX(-50%) rotate(-12deg)}
-.s-az{width:clamp(120px,14.1vw,250px);height:clamp(120px,14.1vw,250px);left:70%;top:43%;transform:translateX(-50%) rotate(9deg)}
-.s-cal{padding:clamp(14px,1.6vw,28px) clamp(22px,2.7vw,46px);left:50%;top:41%;transform:translateX(-50%) rotate(-5deg);flex-direction:row;font:700 clamp(17px,1.97vw,34px)/1 var(--body);letter-spacing:.05em}
+.sticker b{font:900 clamp(38px,4.42vw,80px)/.85 var(--display);font-stretch:125%}
+.sticker small{font:700 clamp(11px,1.19vw,21px)/1 var(--body);letter-spacing:.08em;margin-top:8px}
+.s-alc{width:clamp(130px,14.4vw,257px);height:clamp(130px,14.4vw,257px);left:30%;top:52%;transform:translateX(-50%) rotate(-12deg)}
+.s-az{width:clamp(120px,13.4vw,238px);height:clamp(120px,13.4vw,238px);left:70%;top:43%;transform:translateX(-50%) rotate(9deg)}
+.s-cal{padding:clamp(14px,1.52vw,27px) clamp(22px,2.57vw,44px);left:50%;top:41%;transform:translateX(-50%) rotate(-5deg);flex-direction:row;font:700 clamp(17px,1.87vw,32px)/1 var(--body);letter-spacing:.05em}
 @media (max-width:760px){
   .s-alc{transform:rotate(-12deg)}
   .s-az{transform:rotate(9deg)}
 
-  .logo-slot{top:14%;width:95vw}
+  .logo-slot{top:14%;width:71vw}   /* celular: 25% más pequeño */
   .can-slot-hero{width:36vw}
   #slot-hero-passion{left:4%;top:34%}
   #slot-hero-toronja{right:4%;top:38%}
@@ -362,7 +362,7 @@ try {
   renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('stage'), antialias: true, alpha: true });
 } catch (e) { fail(); throw e; }
 renderer.setClearColor(0x000000, 0);
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.NeutralToneMapping;
 
@@ -517,7 +517,7 @@ addEventListener('pointerdown', (e) => {
 addEventListener('pointerup', () => { if (drag) { drag = null; document.body.style.cursor = ''; } });
 
 const clock = new THREE.Clock();
-let t = 0;
+let t = 0, kS = 0;
 function frame(){
   const dt = Math.min(clock.getDelta(), 0.05);
   t += reduce ? dt * 0.15 : dt;
@@ -532,7 +532,10 @@ function frame(){
   }
 
   const sab = document.getElementById('sabores').getBoundingClientRect().top;
-  const k = smooth(H * 0.95, H * 0.15, sab);
+  const kTarget = smooth(H * 0.95, H * 0.15, sab);
+  kS += (kTarget - kS) * (1 - Math.exp(-dt * 7));   /* transición suavizada: no salta con cada paso de la rueda */
+  if (Math.abs(kTarget - kS) < 0.0005) kS = kTarget;
+  const k = kS;
   stage.style.zIndex = k > 0.5 ? 2 : 0;   /* portada: latas detrás del texto; tarjetas: delante */
   for (const c of cans) {
     const a = rect(c.hero), b = rect(c.card);

@@ -124,9 +124,9 @@ nav.top{display:flex;align-items:center;justify-content:space-between;gap:12px;p
 @keyframes pulse{0%{transform:scale(1,1)}22%{transform:scale(1.1,.84)}58%{transform:scale(.94,1.09)}100%{transform:scale(1,1)}}
 @media (prefers-reduced-motion:reduce){.jelly .bob,.jelly.pulse img,.jelly.pulse canvas{animation:none}.copy .jelly{transition:none}}
 .eyebrow{align-self:flex-start;padding:10px 18px;border:2px solid var(--teal);border-radius:1600px;background:var(--ice);color:var(--teal);font:700 13px/1 var(--body);letter-spacing:.032em}
-.copy h2{margin:0;font:900 clamp(34px,12.4cqi,84px)/.9 var(--display);   /* se ajusta al ancho de su columna: nunca invade las tarjetas */
+.copy h2{margin:0;color:var(--ice);-webkit-text-stroke:clamp(2px,.28vw,4px) var(--teal);paint-order:stroke fill;font:900 clamp(34px,12.4cqi,84px)/.9 var(--display);   /* se ajusta al ancho de su columna: nunca invade las tarjetas */
   font-stretch:125%;text-transform:uppercase;text-wrap:balance}
-.copy h3{margin:0;font:700 clamp(26px,2.8vw,40px)/1 var(--body);letter-spacing:-.01em}
+.copy h3{margin:0;color:var(--ice);-webkit-text-stroke:2px var(--teal);paint-order:stroke fill;font:700 clamp(26px,2.8vw,40px)/1 var(--body);letter-spacing:-.01em}
 .chips{display:flex;flex-wrap:wrap;gap:10px}
 .chip{padding:12px 20px;border:2px solid var(--teal);border-radius:1600px;background:var(--teal);color:var(--paper);font:700 16px/1 var(--body)}
 .chip:nth-child(1){transform:rotate(-3deg)}
@@ -144,11 +144,12 @@ nav.top{display:flex;align-items:center;justify-content:space-between;gap:12px;p
 .card .can-slot{position:absolute;left:50%;top:-190px;width:225px;height:460px;transform:translateX(-50%);pointer-events:none}
 .card .can-slot img{display:none;height:100%;margin:0 auto}
 .no3d .card .can-slot img{display:block}
-.card h3{margin:0;font:400 44px/.8 var(--card-display)}
+.card h3{margin:0;color:var(--ice);-webkit-text-stroke:2px var(--teal);paint-order:stroke fill;font:400 44px/.8 var(--card-display)}
 .card p{margin:0;font:500 14px/1.35 var(--body)}
 .specs{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
-.specs li{padding:6px 12px;border:1px solid var(--ink);border-radius:1600px;background:var(--paper);font:700 12px/1 var(--body);letter-spacing:.03em}
-.card .cta{min-height:0;padding:15px 24px}
+.specs li{padding:6px 12px;border:2px solid var(--teal);border-radius:1600px;background:var(--ice);color:var(--teal);font:700 12px/1 var(--body);letter-spacing:.03em}
+.card .cta{min-height:0;padding:15px 24px;border:2px solid var(--teal);background:var(--ice);color:var(--teal)}
+.card .cta:hover{background:var(--teal);color:var(--ice)}
 /* teléfono: las dos tarjetas lado a lado, escaladas en proporción (≈0.61 a 400 px) */
 @media (max-width:700px){
   .cards{flex-wrap:nowrap;gap:12px;padding-top:29vw}
@@ -428,6 +429,16 @@ Promise.all([load('models/lata_passion.glb.txt'), load('models/lata_toronja.glb.
   loadingEl.classList.add('done');
 }).catch((e) => { console.error(e); fail(); });
 
+/* medusa translúcida en celeste/azul de la marca (la textura se usa solo como relieve de luz) */
+function glassJelly(o, map, strength){
+  const m = new THREE.MeshPhysicalMaterial({
+    color: 0x9fd4f0, emissive: new THREE.Color(0x4fa9d6), emissiveMap: map, emissiveIntensity: strength,
+    roughness: 0.25, metalness: 0, transmission: 0, clearcoat: 0.6, clearcoatRoughness: 0.2,
+    transparent: true, opacity: 0.55, depthWrite: false, side: THREE.DoubleSide
+  });
+  o.material = m; o.renderOrder = 2;
+}
+
 /* medusa 3D girando 360° dentro del círculo del logo de la barra */
 function startMark(){
   const cv = document.getElementById('mark3d');
@@ -470,7 +481,7 @@ function startBigJelly(){
   function fit(){ const w = cv.clientWidth || 400, h = cv.clientHeight || 350; jr.setPixelRatio(Math.min(devicePixelRatio, 2)); jr.setSize(w, h, false); jc.aspect = w / h; jc.updateProjectionMatrix(); }
   load('models/medusa.glb.txt').then((g) => {
     const j = g.scene, map = tex('img/tex_medusa.jpg');
-    j.traverse((o) => { if (o.isMesh) { o.material.map = map; o.material.emissive = new THREE.Color(0xff9ccf); o.material.emissiveMap = map; o.material.emissiveIntensity = 0.28; o.material.envMapIntensity = 0.8; o.material.needsUpdate = true; } });
+    j.traverse((o) => { if (o.isMesh) glassJelly(o, map, 0.35); });
     const box = new THREE.Box3().setFromObject(j), c = box.getCenter(new THREE.Vector3()), sz = box.getSize(new THREE.Vector3());
     const holder = new THREE.Group(); j.position.sub(c); holder.add(j);
     holder.scale.setScalar(3.1 / Math.max(sz.x, sz.y, sz.z)); js.add(holder);

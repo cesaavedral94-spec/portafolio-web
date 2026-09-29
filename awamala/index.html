@@ -375,7 +375,7 @@ logoScene.add(new THREE.HemisphereLight(0xffffff, 0xb9d7ef, 0.9), key.clone(), r
 renderer.autoClear = false;
 
 let W = innerWidth, H = innerHeight;
-function resize(){ W = innerWidth; H = innerHeight; renderer.setSize(W, H, false); cam.aspect = W / H; cam.updateProjectionMatrix(); }
+function resize(){ W = document.documentElement.clientWidth || innerWidth; H = document.documentElement.clientHeight || innerHeight; renderer.setSize(W, H, false);   /* ancho visible real, sin la barra de desplazamiento */ cam.aspect = W / H; cam.updateProjectionMatrix(); }
 addEventListener('resize', resize); resize();
 
 const TAN = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
@@ -514,6 +514,7 @@ let t = 0;
 function frame(){
   const dt = Math.min(clock.getDelta(), 0.05);
   t += reduce ? dt * 0.15 : dt;
+  if (document.documentElement.clientWidth !== W || document.documentElement.clientHeight !== H) resize();
 
   if (logo) {
     const r = rect('slot-logo');

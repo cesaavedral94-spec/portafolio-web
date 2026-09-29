@@ -67,10 +67,11 @@ nav.top{display:flex;align-items:center;justify-content:space-between;gap:12px;p
 .cta:hover{background:var(--violet)}
 
 /* ---- portada ---- */
-.hero{position:relative;height:clamp(620px,100svh,940px)}
+.hero{position:relative;height:clamp(620px,max(100svh,64vw),1500px)}   /* en pantallas anchas la portada guarda la proporción */
 .hero h1{margin:0}
 .slot{position:absolute;pointer-events:none}
-.logo-slot{left:50%;top:16%;transform:translateX(-50%);width:min(902px,94vw);aspect-ratio:6.2/1}
+.logo-slot{left:50%;top:16%;transform:translateX(-50%);width:max(min(902px,94vw),min(80.7vw,1500px));   /* crece con el ancho, igual proporción que a ~1120 px */
+  aspect-ratio:6.2/1}
 .logo-fallback{display:none;text-align:center;color:var(--teal)}
 .no3d .logo-fallback{display:block}
 .logo-fallback b{display:block;font:900 clamp(44px,9vw,120px)/.9 var(--display);font-stretch:125%}
@@ -78,17 +79,17 @@ nav.top{display:flex;align-items:center;justify-content:space-between;gap:12px;p
 .can-slot-hero{width:clamp(150px,19vw,300px);aspect-ratio:1/1}
 #slot-hero-passion{left:13%;top:36%}
 #slot-hero-toronja{right:13%;top:39%}
-.hero-copy{position:absolute;left:50%;top:auto;bottom:22px;transform:translateX(-50%);width:min(440px,calc(100% - 32px));display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
-.hero-copy p{margin:0;color:var(--jelly);font:500 clamp(17px,1.6vw,22px)/1.35 var(--body);letter-spacing:-.01em;text-wrap:balance}
+.hero-copy{position:absolute;left:50%;top:auto;bottom:22px;transform:translateX(-50%);width:min(max(440px,40vw),calc(100% - 32px));display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
+.hero-copy p{margin:0;color:var(--jelly);font:500 clamp(17px,1.75vw,30px)/1.35 var(--body);letter-spacing:-.01em;text-wrap:balance}
 .hero-copy .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .pill.ig{border:2px solid var(--teal);background:var(--ice);color:var(--teal)}
 .pill.ig:hover{background:var(--teal);color:var(--ice)}
 .sticker{position:absolute;border:2px solid var(--teal);background:var(--ice);color:var(--teal);border-radius:1600px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
-.sticker b{font:900 52px/.85 var(--display);font-stretch:125%}
-.sticker small{font:700 14px/1 var(--body);letter-spacing:.08em;margin-top:8px}
-.s-alc{width:170px;height:170px;left:30%;top:52%;transform:translateX(-50%) rotate(-12deg)}
-.s-az{width:158px;height:158px;left:70%;top:43%;transform:translateX(-50%) rotate(9deg)}
-.s-cal{padding:18px 30px;left:50%;top:38%;transform:translateX(-50%) rotate(-5deg);flex-direction:row;font:700 22px/1 var(--body);letter-spacing:.05em}
+.sticker b{font:900 clamp(38px,4.65vw,84px)/.85 var(--display);font-stretch:125%}
+.sticker small{font:700 clamp(11px,1.25vw,22px)/1 var(--body);letter-spacing:.08em;margin-top:8px}
+.s-alc{width:clamp(130px,15.2vw,270px);height:clamp(130px,15.2vw,270px);left:30%;top:52%;transform:translateX(-50%) rotate(-12deg)}
+.s-az{width:clamp(120px,14.1vw,250px);height:clamp(120px,14.1vw,250px);left:70%;top:43%;transform:translateX(-50%) rotate(9deg)}
+.s-cal{padding:clamp(14px,1.6vw,28px) clamp(22px,2.7vw,46px);left:50%;top:41%;transform:translateX(-50%) rotate(-5deg);flex-direction:row;font:700 clamp(17px,1.97vw,34px)/1 var(--body);letter-spacing:.05em}
 @media (max-width:760px){
   .s-alc{transform:rotate(-12deg)}
   .s-az{transform:rotate(9deg)}
@@ -108,7 +109,7 @@ nav.top{display:flex;align-items:center;justify-content:space-between;gap:12px;p
 /* ---- sabores ---- */
 .flavors{padding-block:clamp(80px,10vw,140px) clamp(90px,11vw,150px);padding-inline:clamp(16px,4vw,64px)}
 .flavors .wrap{max-width:1312px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(40px,5vw,80px);align-items:end}
-@media (max-width:1040px){.flavors .wrap{grid-template-columns:minmax(0,1fr)}.copy .chips,.copy .row{justify-content:center}}
+@media (max-width:1040px){.flavors .wrap{grid-template-columns:minmax(0,1fr)}.copy .chips,.copy .row{justify-content:center}.copy .row .pill.ig{border-width:3px}}
 .copy{position:relative;display:flex;flex-direction:column;gap:28px;min-width:0;container-type:inline-size}
 .copy .jelly{position:absolute;left:18%;top:-40px;width:min(520px,70%);z-index:-1;pointer-events:none;transition:transform 1.5s cubic-bezier(.16,.9,.25,1)}
 .jelly .bob{position:relative;animation:float 7s ease-in-out infinite}
@@ -282,7 +283,13 @@ footer .credits a:hover{color:var(--ice)}
   var W = 0, H = 0, dpr = 1, list = [], lastY = scrollY, last = performance.now(), fizzAcc = 0;
   var streams = [];
   function size(){
+    var oW = W, oH = H;
     dpr = Math.min(devicePixelRatio || 1, 2); W = cv.clientWidth || innerWidth; H = cv.clientHeight || innerHeight;
+    /* al cambiar el tamaño, las burbujas que ya están en pantalla se reacomodan en proporción */
+    if (oW > 0 && oH > 0 && (oW !== W || oH !== H)) {
+      var sx = W / oW, sy = H / oH;
+      for (var k = 0; k < list.length; k++) { list[k].x *= sx; list[k].y *= sy; }
+    }
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     streams = []; var n = Math.max(6, Math.round(W / 70));
     for (var i = 0; i < n; i++) streams.push((i + 0.2 + Math.random() * 0.6) / n);   /* puntos de burbujeo repartidos a lo ancho */
@@ -375,7 +382,7 @@ logoScene.add(new THREE.HemisphereLight(0xffffff, 0xb9d7ef, 0.9), key.clone(), r
 renderer.autoClear = false;
 
 let W = innerWidth, H = innerHeight;
-function resize(){ W = document.documentElement.clientWidth || innerWidth; H = document.documentElement.clientHeight || innerHeight; renderer.setSize(W, H, false);   /* ancho visible real, sin la barra de desplazamiento */ cam.aspect = W / H; cam.updateProjectionMatrix(); }
+function resize(){ W = document.documentElement.clientWidth || innerWidth; H = innerHeight; renderer.setSize(W, H, false);   /* ancho visible real, sin la barra de desplazamiento */ cam.aspect = W / H; cam.updateProjectionMatrix(); }
 addEventListener('resize', resize); resize();
 
 const TAN = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
@@ -514,7 +521,7 @@ let t = 0;
 function frame(){
   const dt = Math.min(clock.getDelta(), 0.05);
   t += reduce ? dt * 0.15 : dt;
-  if (document.documentElement.clientWidth !== W || document.documentElement.clientHeight !== H) resize();
+  if (document.documentElement.clientWidth !== W || innerHeight !== H) resize();
 
   if (logo) {
     const r = rect('slot-logo');

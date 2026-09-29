@@ -150,7 +150,6 @@ nav.top{display:flex;align-items:center;justify-content:space-between;gap:12px;p
 .specs li{padding:6px 12px;border:0;box-shadow:inset 0 0 0 2px var(--teal);border-radius:1600px;background:var(--ice);color:var(--teal);font:700 12px/1 var(--body);letter-spacing:.03em}
 .card .cta{min-height:0;padding:15px 24px;border:0;box-shadow:inset 0 0 0 2px var(--teal);background:var(--ice);color:var(--teal)}
 .card .cta:hover{background:var(--teal);color:var(--ice)}
-.card .cta,.specs li{transform:translateZ(0);backface-visibility:hidden}   /* capa propia: Safari la alinea al píxel y el contorno queda parejo */
 /* teléfono: las dos tarjetas lado a lado, escaladas en proporción (≈0.61 a 400 px) */
 @media (max-width:700px){
   .cards{flex-wrap:nowrap;gap:12px;padding-top:29vw}
@@ -392,6 +391,23 @@ footer .credits a:hover{color:var(--ice)}
     requestAnimationFrame(draw);
   }
   requestAnimationFrame(draw);
+})();
+</script>
+
+<script>
+/* alinea las tarjetas al píxel exacto: si quedan a medio píxel, los bordes de abajo se ven más finos */
+(function(){
+  var cards = document.querySelector('.cards'); if (!cards) return;
+  function snap(){
+    cards.style.transform = '';
+    var dpr = window.devicePixelRatio || 1;
+    var y = cards.getBoundingClientRect().top + window.scrollY;
+    var dev = y * dpr, off = (Math.round(dev) - dev) / dpr;
+    if (Math.abs(off) > 0.001) cards.style.transform = 'translateY(' + off.toFixed(3) + 'px)';
+  }
+  addEventListener('load', snap); addEventListener('resize', snap);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(snap);
+  setTimeout(snap, 1500);
 })();
 </script>
 <script type="importmap">

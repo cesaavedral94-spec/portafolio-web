@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="AWAMALA Hard Seltzer — agua carbonatada, alcohol, sabor natural, cero azúcar. Passion Fruit y Toronja.">
+<title>AWAMALA Hard Seltzer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,800;125,900&family=Bowlby+One&family=Poppins:wght@300;400;500;600;700&display=swap">
+<style>
+/* Layout: portada con el logo 3D y una lata por sabor flotando; al bajar, cada lata viaja a su tarjeta.
+   Fondo de color sólido; un lienzo WebGL transparente por encima dibuja solo el logo y las latas. Estilo "stickers" de Slush. */
+:root{
+  --bg:#dceeff;         /* fondo sólido */
+  --jelly:#a8438a;      /* rosado de la medusa */
+  --ice:#eef8ff;        /* interior celeste claro de los stickers */
+  --teal:#0f5f7c;       /* azul AWAMALA de la lata */
+  --ink:#000000;        /* texto, bordes y botones */
+  --paper:#ffffff;
+  --sun:#ffd731;        /* Passion Fruit */
+  --pink:#ffb8c6;       /* Toronja */
+  --mint:#55db9c;
+  --lav:#e9ccff;
+  --ember:#fb4903;
+  --violet:#5c4ade;
+  --display:'Archivo','Arial Black',Impact,sans-serif;
+  --card-display:'Bowlby One','Arial Black',Impact,sans-serif;
+  --body:'Poppins','Helvetica Neue',Arial,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-weight:400;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--violet);outline-offset:3px}
+
+/* lienzo 3D transparente, por encima del contenido y sin capturar clics */
+#stage{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:2;pointer-events:none}
+main,header,footer{position:relative;z-index:1}
+main{overflow-x:clip}
+#bubbles{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none}
+
+/* ---- marquee ---- */
+.marquee{background:var(--ice);color:var(--teal);border-bottom:2px solid var(--teal);overflow:hidden;height:40px;display:flex;align-items:center;padding-top:env(safe-area-inset-top,0px)}
+.marquee .track{display:flex;gap:28px;white-space:nowrap;padding-left:28px;animation:mq 40s linear infinite}
+.marquee span{font:600 12px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:28px}
+header .marquee,footer .marquee{height:50px;background:var(--ice);color:var(--teal);border-block:2px solid var(--teal)}
+header .marquee span,footer .marquee span{font:400 20px/1 var(--card-display);letter-spacing:0}
+@keyframes mq{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.marquee .track{animation:none}}
+
+/* ---- nav ---- */
+nav.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px clamp(16px,3.4vw,48px);flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand .mark{position:relative;width:52px;height:52px;color:var(--teal);display:grid;place-items:center}
+.brand .mark canvas{position:absolute;inset:0;width:100%;height:100%;display:none}
+.mark3d-on .brand .mark canvas{display:block}
+.mark3d-on .brand .mark .mark-svg{display:none}
+.brand .word{font:900 15px/1 var(--display);font-stretch:125%;color:var(--teal)}
+.pill,.cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 22px;border-radius:1600px;border:1px solid var(--ink);font:700 13px/1 var(--body);letter-spacing:.032em;text-transform:uppercase;text-decoration:none;transition:background .15s ease,color .15s ease}
+.pill{background:var(--paper);color:var(--ink)}
+.pill:hover{background:var(--ink);color:var(--paper)}
+.cta{background:var(--ink);color:var(--paper);border-radius:40px}
+.cta:hover{background:var(--violet)}
+
+/* ---- portada ---- */
+.hero{position:relative;height:clamp(620px,100svh,940px)}
+.hero h1{margin:0}
+.slot{position:absolute;pointer-events:none}
+.logo-slot{left:50%;top:16%;transform:translateX(-50%);width:min(820px,86vw);aspect-ratio:6.2/1}
+.logo-fallback{display:none;text-align:center;color:var(--teal)}
+.no3d .logo-fallback{display:block}
+.logo-fallback b{display:block;font:900 clamp(44px,9vw,120px)/.9 var(--display);font-stretch:125%}
+.logo-fallback i{display:block;font:300 clamp(13px,2vw,26px)/1.6 var(--body);font-style:normal;letter-spacing:.6em}
+.can-slot-hero{width:clamp(150px,19vw,300px);aspect-ratio:1/1}
+#slot-hero-passion{left:13%;top:36%}
+#slot-hero-toronja{right:13%;top:39%}
+.hero-copy{position:absolute;left:50%;top:auto;bottom:22px;transform:translateX(-50%);width:min(440px,calc(100% - 32px));display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
+.hero-copy p{margin:0;color:var(--jelly);font:500 clamp(17px,1.6vw,22px)/1.35 var(--body);letter-spacing:-.01em;text-wrap:balance}
+.hero-copy .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.pill.ig{border:2px solid var(--teal);background:var(--ice);color:var(--teal)}
+.pill.ig:hover{background:var(--teal);color:var(--ice)}
+.sticker{position:absolute;border:2px solid var(--teal);background:var(--ice);color:var(--teal);border-radius:1600px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+.sticker b{font:900 52px/.85 var(--display);font-stretch:125%}
+.sticker small{font:700 14px/1 var(--body);letter-spacing:.08em;margin-top:8px}
+.s-alc{width:170px;height:170px;left:23%;top:52%;transform:rotate(-12deg)}
+.s-az{width:158px;height:158px;left:55%;top:43%;transform:rotate(9deg)}
+.s-cal{padding:18px 30px;left:calc(39% - 43px);top:38%;transform:rotate(-5deg);flex-direction:row;font:700 22px/1 var(--body);letter-spacing:.05em}
+@media (max-width:760px){
+  .logo-slot{top:14%;width:90vw}
+  .can-slot-hero{width:36vw}
+  #slot-hero-passion{left:4%;top:34%}
+  #slot-hero-toronja{right:4%;top:38%}
+  .hero-copy{top:auto;bottom:28px}
+  .s-alc{width:116px;height:116px;left:calc(50% - 58px);top:36%}
+  .sticker b{font-size:38px}
+  .sticker small{font-size:11px}
+  .s-az{width:108px;height:108px;left:calc(50% - 54px);top:59%}
+  .s-cal{display:none}
+}
+
+/* ---- sabores ---- */
+.flavors{padding-block:clamp(80px,10vw,140px) clamp(90px,11vw,150px);padding-inline:clamp(16px,4vw,64px)}
+.flavors .wrap{max-width:1312px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(40px,5vw,80px);align-items:end}
+@media (max-width:1040px){.flavors .wrap{grid-template-columns:minmax(0,1fr)}.copy .chips,.copy .row{justify-content:center}}
+.copy{position:relative;display:flex;flex-direction:column;gap:28px;min-width:0;container-type:inline-size}
+.copy .jelly{position:absolute;left:18%;top:-40px;width:min(520px,70%);z-index:-1;pointer-events:none;transition:transform 1.5s cubic-bezier(.16,.9,.25,1)}
+.jelly .bob{position:relative;animation:float 7s ease-in-out infinite}
+.jelly img,.jelly canvas{display:block;width:100%;transform-origin:50% 28%}
+.jelly canvas{display:none;position:absolute;left:-35%;top:-35%;width:170%;height:170%;pointer-events:none}
+.jelly3d-on .jelly canvas{display:block}
+.jelly3d-on .jelly .bob{aspect-ratio:1.14/1}
+.jelly3d-on .jelly img{display:none}
+.jelly.pulse canvas{transform-origin:50% 40%}
+.jelly.pulse img,.jelly.pulse canvas{animation:pulse .95s ease-out}
+@keyframes float{0%,100%{transform:translate(0,0) rotate(-16deg)}50%{transform:translate(12px,-26px) rotate(-10deg)}}
+@keyframes pulse{0%{transform:scale(1,1)}22%{transform:scale(1.1,.84)}58%{transform:scale(.94,1.09)}100%{transform:scale(1,1)}}
+@media (prefers-reduced-motion:reduce){.jelly .bob,.jelly.pulse img,.jelly.pulse canvas{animation:none}.copy .jelly{transition:none}}
+.eyebrow{align-self:flex-start;padding:10px 18px;border:2px solid var(--teal);border-radius:1600px;background:var(--ice);color:var(--teal);font:700 13px/1 var(--body);letter-spacing:.032em}
+.copy h2{margin:0;font:900 clamp(34px,12.4cqi,84px)/.9 var(--display);   /* se ajusta al ancho de su columna: nunca invade las tarjetas */
+  font-stretch:125%;text-transform:uppercase;text-wrap:balance}
+.copy h3{margin:0;font:700 clamp(26px,2.8vw,40px)/1 var(--body);letter-spacing:-.01em}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{padding:12px 20px;border:2px solid var(--teal);border-radius:1600px;background:var(--teal);color:var(--paper);font:700 16px/1 var(--body)}
+.chip:nth-child(1){transform:rotate(-3deg)}
+.chip:nth-child(2){transform:rotate(2deg)}
+.chip:nth-child(3){transform:rotate(-2deg)}
+.chip:nth-child(4){transform:rotate(3deg)}
+.copy p{margin:0;color:var(--teal);max-width:22em;font:500 22px/1.3 var(--body);letter-spacing:-.01em}
+.copy .row{display:flex;gap:10px;flex-wrap:wrap}
+
+/* tarjetas: idénticas al diseño del lienzo (292 × 570, radio 40, borde 1px, lata que sobresale 190px) */
+.cards{display:flex;gap:32px;flex-wrap:wrap;justify-content:center;padding-top:190px}
+.card{position:relative;width:292px;max-width:100%;height:570px;padding:24px;border:1px solid var(--ink);border-radius:40px;display:flex;flex-direction:column;justify-content:flex-end;gap:14px}
+.card.passion{background:var(--sun)}
+.card.toronja{background:var(--pink)}
+.card .can-slot{position:absolute;left:50%;top:-190px;width:225px;height:460px;transform:translateX(-50%);pointer-events:none}
+.card .can-slot img{display:none;height:100%;margin:0 auto}
+.no3d .card .can-slot img{display:block}
+.card h3{margin:0;font:400 44px/.8 var(--card-display)}
+.card p{margin:0;font:500 14px/1.35 var(--body)}
+.specs{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.specs li{padding:6px 12px;border:1px solid var(--ink);border-radius:1600px;background:var(--paper);font:700 12px/1 var(--body);letter-spacing:.03em}
+.card .cta{min-height:0;padding:15px 24px}
+/* teléfono: las dos tarjetas lado a lado, escaladas en proporción (≈0.61 a 400 px) */
+@media (max-width:700px){
+  .cards{flex-wrap:nowrap;gap:12px;padding-top:29vw}
+  .card{width:calc((100% - 12px) / 2);height:auto;padding:43vw 3.7vw 3.7vw;border-radius:6.1vw;gap:2.1vw}
+  .card .can-slot{top:-29vw;width:34.3vw;height:70.1vw}
+  .card h3{font-size:6.7vw}
+  .card p{font-size:max(11px,2.6vw)}
+  .specs{gap:4px}
+  .specs li{padding:4px 7px;font-size:max(9px,2.2vw)}
+  .card .cta{padding:10px 8px;font-size:max(10px,2.5vw);letter-spacing:.02em}
+}
+
+/* ---- pie ---- */
+footer .legal{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;padding:18px clamp(16px,4vw,64px);background:var(--ink);color:rgba(255,255,255,.8);font:400 12.5px/1.5 var(--body)}
+footer .legal a{color:var(--paper)}
+footer .credits{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px;padding:14px clamp(16px,4vw,64px) calc(14px + env(safe-area-inset-bottom,0px));background:var(--ink);color:rgba(255,255,255,.8);border-top:1px solid rgba(255,255,255,.18);font:500 12.5px/1.5 var(--body)}
+footer .credits a{color:var(--paper);font-weight:600;text-underline-offset:3px}
+footer .credits a:hover{color:var(--ice)}
+.loading{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:3;padding:10px 16px;border-radius:1600px;background:var(--paper);border:1px solid var(--ink);font:700 11px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;transition:opacity .4s ease}
+.loading.done{opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<canvas id="bubbles" aria-hidden="true"></canvas>
+<canvas id="stage" aria-hidden="true"></canvas>
+
+<header>
+  <div class="marquee" aria-hidden="true"><div class="track" id="mq1"></div></div>
+  <nav class="top" aria-label="Principal">
+    <a class="brand" href="#inicio" aria-label="AWAMALA, inicio"><span class="mark"><canvas id="mark3d" width="92" height="92" aria-hidden="true"></canvas><svg class="mark-svg" width="30" height="30" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 15.5C5 9 10 4.5 16 4.5S27 9 27 15.5c-1.8 1.2-3.7 1.2-5.5 0-1.8 1.2-3.7 1.2-5.5 0-1.8 1.2-3.7 1.2-5.5 0-1.8 1.2-3.7 1.2-5.5 0Z" fill="currentColor"/><path d="M9.5 17.5c-1.2 2.2 1.2 3.8 0 6s1.2 3.8 0 5.5"/><path d="M14 17.8c-1 2.3 1 3.9 0 6.2"/><path d="M18 17.8c1 2.3-1 3.9 0 6.2s-1 3.6 0 5"/><path d="M22.5 17.5c1.2 2.2-1.2 3.8 0 6"/></svg></span><span class="word">AWAMALA</span></a>
+    <a class="pill ig" href="#sabores">Ver sabores</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" id="inicio" aria-label="Portada">
+    <h1 class="slot logo-slot" id="slot-logo">
+      <span class="sr">AWAMALA Hard Seltzer</span>
+      <span class="logo-fallback" aria-hidden="true"><b>AWAMALA</b><i>HARD SELTZER</i></span>
+    </h1>
+    <div class="sticker s-cal" aria-hidden="true">92 CAL · 330 ML</div>
+    <div class="slot can-slot-hero" id="slot-hero-passion"></div>
+    <div class="slot can-slot-hero" id="slot-hero-toronja"></div>
+    <div class="sticker s-alc" aria-hidden="true"><b>5%</b><small>ALC. VOL.</small></div>
+    <div class="sticker s-az" aria-hidden="true"><b>0g</b><small>AZÚCAR</small></div>
+    <div class="hero-copy">
+      <p>Agua carbonatada. Alcohol. Sabor natural. Cero azúcar.</p>
+      <div class="row">
+        <a class="pill ig" href="https://www.instagram.com/awamala.drinks/" target="_blank" rel="noopener">@awamala.drinks</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="flavors" id="sabores" aria-labelledby="t-sabores">
+    <div class="wrap">
+      <div class="copy" id="que-es">
+        <div class="jelly" id="jelly" aria-hidden="true"><div class="bob"><canvas id="jelly3d"></canvas><img src="img/medusa.webp" alt=""></div></div>
+        <button class="sr" id="jelly-btn" type="button">Hacer nadar a la medusa</button>
+        <h2 id="t-sabores">Se reportan Awamalas</h2>
+        <h3>¿Qué es un Hard Seltzer?</h3>
+        <div class="chips"><span class="chip">Agua carbonatada</span><span class="chip">Alcohol</span><span class="chip">Sabor natural</span><span class="chip">Cero azúcar</span></div>
+        <p>La lista completa cabe en cuatro líneas. Nos gusta que así sea.</p>
+        <div class="row">
+          <a class="pill ig" href="https://api.whatsapp.com/send/?phone=593984024742&amp;type=phone_number&amp;app_absent=0" target="_blank" rel="noopener">Dónde comprar</a>
+          <a class="pill ig" href="https://www.instagram.com/awamala.drinks/" target="_blank" rel="noopener" style="text-transform:none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor"></circle></svg>
+            @awamala.drinks</a>
+        </div>
+      </div>
+      <div class="cards">
+        <article class="card passion">
+          <div class="can-slot" id="slot-card-passion"><img src="img/lata_pie_passion.webp" alt="Lata AWAMALA Passion Fruit"></div>
+          <h3>PASSION<br>FRUIT</h3>
+          <p>Cóctel carbonatado sabor maracuyá.</p>
+          <ul class="specs"><li>5% ALC.</li><li>92 CAL</li><li>0 G AZÚCAR</li></ul>
+          <a class="cta" href="https://api.whatsapp.com/send/?phone=593984024742&amp;type=phone_number&amp;app_absent=0" target="_blank" rel="noopener">Comprar</a>
+        </article>
+        <article class="card toronja">
+          <div class="can-slot" id="slot-card-toronja"><img src="img/lata_pie_toronja.webp" alt="Lata AWAMALA Toronja"></div>
+          <h3>TORONJA</h3>
+          <p>Cóctel carbonatado sabor toronja.</p>
+          <ul class="specs"><li>5% ALC.</li><li>92 CAL</li><li>0 G AZÚCAR</li></ul>
+          <a class="cta" href="https://api.whatsapp.com/send/?phone=593984024742&amp;type=phone_number&amp;app_absent=0" target="_blank" rel="noopener">Comprar</a>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="marquee" aria-hidden="true"><div class="track" id="mq2"></div></div>
+  <div class="legal">
+    <span>Cóctel carbonatado · Hecho en Quito, Ecuador · Venta prohibida a menores de 18 años.</span>
+    <span>El consumo excesivo de alcohol perjudica tu salud · <a href="https://www.instagram.com/awamala.drinks/" target="_blank" rel="noopener">@awamala.drinks</a></span>
+  </div>
+  <div class="credits">
+    <span>© AWAMALA · Marca registrada</span>
+    <span>Website por <a href="https://cesaavedral94-spec.github.io/portafolio-web/" target="_blank" rel="noopener">Carlos Enrique Saavedra</a></span>
+  </div>
+</footer>
+<div class="loading" id="loading" role="status">Cargando latas…</div>
+
+<script>
+(function(){
+  var star='<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1L14.6 9.4 23 12 14.6 14.6 12 23 9.4 14.6 1 12 9.4 9.4Z" fill="COLOR"/></svg>';
+  function fill(id,words,colors){var h='';for(var r=0;r<2;r++)words.forEach(function(w,i){h+='<span>'+w+star.replace('COLOR',colors[i%colors.length])+'</span>';});document.getElementById(id).innerHTML=h;}
+  fill('mq1',['Agua carbonatada','Alcohol','Sabor natural','Cero azúcar','Drink smart','Passion Fruit','Toronja'],['#0f5f7c']);
+  /* medusa: flota sola; cada clic la impulsa un poco más */
+  var jelly=document.getElementById('jelly'), sec=document.getElementById('sabores'), off={x:0,y:0,r:0};
+  function inJelly(x,y){var r=jelly.querySelector('.bob').getBoundingClientRect(),mx=r.width*.12,my=r.height*.1;return x>r.left+mx&&x<r.right-mx&&y>r.top+my&&y<r.bottom-my;}
+  function swim(){
+    var a=(-150+Math.random()*120)*Math.PI/180, d=70+Math.random()*50, dx=Math.cos(a)*d, dy=Math.sin(a)*d;
+    var jr=jelly.getBoundingClientRect(), sr=sec.getBoundingClientRect();
+    if(jr.left+dx<sr.left+8||jr.right+dx>sr.right-8)dx=-dx;
+    if(jr.top+dy<sr.top+8||jr.bottom+dy>sr.bottom-8)dy=-dy;
+    off.x+=dx; off.y+=dy; off.r=Math.max(-24,Math.min(24,off.r+dx*.06));
+    jelly.style.transform='translate('+off.x+'px,'+off.y+'px) rotate('+off.r+'deg)';
+    jelly.classList.remove('pulse'); void jelly.offsetWidth; jelly.classList.add('pulse');
+    dispatchEvent(new CustomEvent('jellyswim', { detail: { dx: dx } }));
+  }
+  document.addEventListener('click',function(e){if(e.target.closest('a,button'))return;if(inJelly(e.clientX,e.clientY))swim();});
+  document.addEventListener('pointermove',function(e){if(e.target.closest('a,button'))return;var over=inJelly(e.clientX,e.clientY);if(over)document.body.style.cursor='pointer';else if(document.body.style.cursor==='pointer')document.body.style.cursor='';},{passive:true});
+  document.getElementById('jelly-btn').addEventListener('click',swim);
+  fill('mq2',['PASSION FRUIT','TORONJA','5% ALC.','CERO AZÚCAR','330 ML','DRINK SMART'],['#0f5f7c']);
+})();
+</script>
+<script>
+/* burbujas: al bajar suben repartidas en todo el ancho; cerca del final de la página burbujea como una gaseosa */
+(function(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var cv = document.getElementById('bubbles'), ctx = cv.getContext('2d');
+  var W = 0, H = 0, dpr = 1, list = [], lastY = scrollY, last = performance.now(), fizzAcc = 0;
+  var streams = [];
+  function size(){
+    dpr = Math.min(devicePixelRatio || 1, 2); W = cv.clientWidth || innerWidth; H = cv.clientHeight || innerHeight;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    streams = []; var n = Math.max(6, Math.round(W / 70));
+    for (var i = 0; i < n; i++) streams.push((i + 0.2 + Math.random() * 0.6) / n);   /* puntos de burbujeo repartidos a lo ancho */
+  }
+  addEventListener('resize', size); size();
+  function add(x, r, vy, amp){
+    if (list.length >= 320) return;
+    list.push({ x: x, y: H + r + Math.random() * 30, r: r, vy: vy, ph: Math.random() * 6.28, amp: amp, life: 0 });
+  }
+  function scrollBubbles(n, boost){
+    for (var i = 0; i < n; i++) {
+      var r = 3 + Math.pow(Math.random(), 1.8) * 20;
+      add(Math.random() * W, r, 70 + Math.random() * 110 + boost, 6 + Math.random() * 16);
+    }
+  }
+  function progress(){   /* 0 arriba de la página, 1 al final */
+    var max = document.documentElement.scrollHeight - innerHeight;
+    return max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
+  }
+  addEventListener('scroll', function(){
+    var dy = scrollY - lastY; lastY = scrollY;
+    if (dy > 0 && Math.random() < 0.6) scrollBubbles(Math.min(3, Math.ceil(dy / 40)), Math.min(260, dy * 3));
+    for (var i = 0; i < list.length; i++) list[i].y -= dy * 0.25;
+  }, { passive: true });
+  function draw(now){
+    var dt = Math.min((now - last) / 1000, 0.05); last = now;
+    if (Math.abs(cv.clientWidth - W) > 1 || Math.abs(cv.clientHeight - H) > 1) size();
+    /* efervescencia: arranca a mitad de página y crece hasta el final */
+    var fz = Math.max(0, (progress() - 0.45) / 0.55);
+    fizzAcc += dt * fz * fz * 130;
+    while (fizzAcc > 1) {
+      fizzAcc -= 1;
+      var sx = Math.random() * W;   /* repartidas al azar en todo el ancho */
+      add(sx, 1.6 + Math.random() * 4.5, 160 + Math.random() * 180, 1.5 + Math.random() * 3);
+    }
+    ctx.clearRect(0, 0, W, H);
+    for (var i = list.length - 1; i >= 0; i--) {
+      var b = list[i]; b.life += dt; b.vy *= 0.997;
+      b.y -= b.vy * dt;
+      var x = b.x + Math.sin(b.life * 2.4 + b.ph) * b.amp;
+      var a = Math.min(1, b.life * 3) * Math.max(0, Math.min(1, (b.y + b.r) / (H * 0.35)));
+      if (b.y < -b.r * 2 || (a <= 0 && b.life > 0.5)) { list.splice(i, 1); continue; }
+      ctx.globalAlpha = a;
+      ctx.beginPath(); ctx.arc(x, b.y, b.r, 0, 6.2832);
+      ctx.fillStyle = 'rgba(238,248,255,.8)'; ctx.fill();
+      ctx.lineWidth = Math.max(1, b.r * 0.12); ctx.strokeStyle = 'rgba(15,95,124,.9)'; ctx.stroke();
+      if (b.r > 3) { ctx.beginPath(); ctx.arc(x - b.r * 0.35, b.y - b.r * 0.35, b.r * 0.22, 0, 6.2832); ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.fill(); }
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+</script>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const loadingEl = document.getElementById('loading');
+const stage = document.getElementById('stage');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function fail(){ document.documentElement.classList.add('no3d'); document.getElementById('stage').style.display = 'none'; loadingEl.classList.add('done'); }
+
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('stage'), antialias: true, alpha: true });
+} catch (e) { fail(); throw e; }
+renderer.setClearColor(0x000000, 0);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NeutralToneMapping;
+
+const scene = new THREE.Scene();
+const FOV = 28, CAMZ = 14;
+const cam = new THREE.PerspectiveCamera(FOV, 1, 0.1, 100);
+cam.position.set(0, 0, CAMZ);
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.add(new THREE.HemisphereLight(0xffffff, 0xb9d7ef, 0.9));
+const key = new THREE.DirectionalLight(0xffffff, 1.5); key.position.set(-4, 8, 6); scene.add(key);
+const rim = new THREE.DirectionalLight(0xdff0ff, 0.8); rim.position.set(6, -2, -4); scene.add(rim);
+/* el logo va en su propia escena y se dibuja al final, siempre por encima de las latas */
+const logoScene = new THREE.Scene();
+logoScene.environment = scene.environment;
+logoScene.add(new THREE.HemisphereLight(0xffffff, 0xb9d7ef, 0.9), key.clone(), rim.clone());
+renderer.autoClear = false;
+
+let W = innerWidth, H = innerHeight;
+function resize(){ W = innerWidth; H = innerHeight; renderer.setSize(W, H, false); cam.aspect = W / H; cam.updateProjectionMatrix(); }
+addEventListener('resize', resize); resize();
+
+const TAN = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
+const pxPerWorld = (z) => H / (2 * (CAMZ - z) * TAN);
+const toWorld = (x, y, z) => { const k = 1 / pxPerWorld(z); return new THREE.Vector3((x - W / 2) * k, -(y - H / 2) * k, z); };
+function rect(id){ const r = document.getElementById(id).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width, h: r.height }; }
+const lerp = THREE.MathUtils.lerp;
+const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+
+const loader = new GLTFLoader();
+const texLoader = new THREE.TextureLoader();
+async function load(u){
+  const txt = await (await fetch(u)).text();
+  const bin = Uint8Array.from(atob(txt.trim()), (ch) => ch.charCodeAt(0));
+  return loader.parseAsync(bin.buffer, '');
+}
+function tex(u){ const t = texLoader.load(u); t.flipY = false; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; }
+function applyMap(root, map){
+  root.traverse((o) => { if (o.isMesh) { const ms = Array.isArray(o.material) ? o.material : [o.material];
+    ms.forEach((m) => { if (/Etiqueta/.test(m.name)) { m.map = map; m.color.set(0xffffff); m.needsUpdate = true; } }); } });
+}
+
+const cans = [];
+let logo = null;
+Promise.all([load('models/lata_passion.glb.txt'), load('models/lata_toronja.glb.txt'), load('models/logo_awamala.glb.txt')])
+.then(([gp, gt, gl]) => {
+  applyMap(gp.scene, tex('img/tex_passion.jpg'));
+  applyMap(gt.scene, tex('img/tex_toronja.jpg'));
+  [
+    { g: gp, hero: 'slot-hero-passion', card: 'slot-card-passion', roll: 0.36, tilt: 0.3, phase: 0 },
+    { g: gt, hero: 'slot-hero-toronja', card: 'slot-card-toronja', roll: -0.36, tilt: 0.3, phase: 2.1 }
+  ].forEach((d) => {
+    const pivot = new THREE.Group(); const body = d.g.scene;
+    body.rotation.order = 'ZXY';
+    body.traverse((o) => { if (o.isMesh) o.material.envMapIntensity = 1.1; });
+    pivot.add(body); scene.add(pivot);
+    const q0 = new THREE.Quaternion().setFromEuler(new THREE.Euler(d.tilt, 0, d.roll, 'ZXY'));
+    cans.push({ ...d, pivot, body, spin: 0, vel: 0, tq: q0, kick: new THREE.Vector3() });
+  });
+  logo = gl.scene; logoScene.add(logo);
+  startMark();
+  startBigJelly();
+  loadingEl.classList.add('done');
+}).catch((e) => { console.error(e); fail(); });
+
+/* medusa 3D girando 360° dentro del círculo del logo de la barra */
+function startMark(){
+  const cv = document.getElementById('mark3d');
+  let mr;
+  try { mr = new THREE.WebGLRenderer({ canvas: cv, antialias: true, alpha: true }); } catch (e) { return; }
+  mr.setClearColor(0x000000, 0); mr.setPixelRatio(1); mr.setSize(92, 92, false);
+  mr.outputColorSpace = THREE.SRGBColorSpace; mr.toneMapping = THREE.NeutralToneMapping;
+  const ms = new THREE.Scene();
+  ms.add(new THREE.HemisphereLight(0xffffff, 0x445566, 1.6));
+  const d = new THREE.DirectionalLight(0xffffff, 1.4); d.position.set(2, 3, 4); ms.add(d);
+  const mc = new THREE.PerspectiveCamera(30, 1, 0.1, 50); mc.position.set(0, 0, 5.2);
+  load('models/medusa.glb.txt').then((g) => {
+    const j = g.scene;
+    const map = tex('img/tex_medusa.jpg');
+    j.traverse((o) => { if (o.isMesh) { o.material.map = map; o.material.emissive = new THREE.Color(0xff9ccf); o.material.emissiveMap = map; o.material.emissiveIntensity = 0.5; o.material.needsUpdate = true; } });
+    const box = new THREE.Box3().setFromObject(j), c = box.getCenter(new THREE.Vector3()), sz = box.getSize(new THREE.Vector3());
+    const holder = new THREE.Group(); j.position.sub(c); holder.add(j);
+    holder.scale.setScalar(2.2 / Math.max(sz.x, sz.y, sz.z)); ms.add(holder);
+    document.documentElement.classList.add('mark3d-on');
+    const ck = new THREE.Clock();
+    (function spin(){ const dt = Math.min(ck.getDelta(), 0.05);
+      holder.rotation.y += dt * (reduce ? 0.2 : 1.3);
+      holder.position.y = Math.sin(ck.elapsedTime * 1.6) * 0.06;
+      mr.render(ms, mc); requestAnimationFrame(spin); })();
+  }).catch((e) => { console.warn('mark3d', e); });
+}
+
+/* medusa grande en 3D: gira y se balancea en perspectiva; cada clic le da un impulso de giro */
+function startBigJelly(){
+  const cv = document.getElementById('jelly3d');
+  let jr;
+  try { jr = new THREE.WebGLRenderer({ canvas: cv, antialias: true, alpha: true }); } catch (e) { return; }
+  jr.setClearColor(0x000000, 0); jr.outputColorSpace = THREE.SRGBColorSpace; jr.toneMapping = THREE.NeutralToneMapping;
+  const js = new THREE.Scene();
+  js.environment = scene.environment;
+  js.add(new THREE.HemisphereLight(0xffffff, 0x6a8fb0, 1.2));
+  const dl = new THREE.DirectionalLight(0xffffff, 1.6); dl.position.set(-3, 4, 5); js.add(dl);
+  const rl = new THREE.DirectionalLight(0xffc6e6, 0.9); rl.position.set(4, -1, -3); js.add(rl);
+  const jc = new THREE.PerspectiveCamera(32, 1.14, 0.1, 60); jc.position.set(0, 0.1, 8.5);   /* lienzo 1.7× más grande: la medusa nunca toca los bordes */
+  function fit(){ const w = cv.clientWidth || 400, h = cv.clientHeight || 350; jr.setPixelRatio(Math.min(devicePixelRatio, 2)); jr.setSize(w, h, false); jc.aspect = w / h; jc.updateProjectionMatrix(); }
+  load('models/medusa.glb.txt').then((g) => {
+    const j = g.scene, map = tex('img/tex_medusa.jpg');
+    j.traverse((o) => { if (o.isMesh) { o.material.map = map; o.material.emissive = new THREE.Color(0xff9ccf); o.material.emissiveMap = map; o.material.emissiveIntensity = 0.28; o.material.envMapIntensity = 0.8; o.material.needsUpdate = true; } });
+    const box = new THREE.Box3().setFromObject(j), c = box.getCenter(new THREE.Vector3()), sz = box.getSize(new THREE.Vector3());
+    const holder = new THREE.Group(); j.position.sub(c); holder.add(j);
+    holder.scale.setScalar(3.1 / Math.max(sz.x, sz.y, sz.z)); js.add(holder);
+    document.documentElement.classList.add('jelly3d-on');
+    fit(); addEventListener('resize', fit);
+    let visible = true, spinV = 0;
+    new IntersectionObserver((es) => { visible = es[0].isIntersecting; }).observe(cv);
+    addEventListener('jellyswim', (e) => { spinV += (e.detail.dx >= 0 ? 1 : -1) * 0.45; });   /* clic: pequeño giro que vuelve solo */
+    const ck = new THREE.Clock();
+    (function loop(){
+      requestAnimationFrame(loop);
+      const dt = Math.min(ck.getDelta(), 0.05); if (!visible) return;
+      const tt = ck.elapsedTime * (reduce ? 0.15 : 1);
+      spinV *= 0.965;
+      const yaw = Math.sin(tt * 0.4) * 0.3 + Math.sin(tt * 0.23 + 1.3) * 0.15 + spinV;   /* balanceo ligero, sin vueltas completas */
+      holder.rotation.set(Math.sin(tt * 0.6) * 0.16, yaw, Math.sin(tt * 0.45) * 0.1);
+      const pulse = 1 + Math.sin(tt * 1.8) * 0.045;
+      holder.children[0].scale.set(2 - pulse, pulse, 2 - pulse);
+      jr.render(js, jc);
+    })();
+  }).catch(() => {});
+}
+
+/* arrastrar para girar */
+const mouse = { nx: 0, ny: 0 };
+const ray = new THREE.Raycaster();
+let drag = null;
+function hitCan(x, y){
+  ray.setFromCamera(new THREE.Vector2((x / W) * 2 - 1, -(y / H) * 2 + 1), cam);
+  for (const c of cans) if (ray.intersectObject(c.body, true).length) return c;
+  return null;
+}
+addEventListener('pointermove', (e) => {
+  mouse.nx = e.clientX / W - 0.5; mouse.ny = e.clientY / H - 0.5;
+  if (drag) { const dx = e.clientX - drag.lx, dy = e.clientY - drag.ly; drag.lx = e.clientX; drag.ly = e.clientY;
+    drag.can.vel = dx * 0.012; drag.can.spin += dx * 0.012; drag.can.kick.add(new THREE.Vector3(dy * 0.08, dx * 0.08, 0)); }
+  else if (!e.target.closest('a,button')) document.body.style.cursor = hitCan(e.clientX, e.clientY) ? 'grab' : '';
+}, { passive: true });
+addEventListener('pointerdown', (e) => {
+  if (e.target.closest('a,button')) return;
+  const c = hitCan(e.clientX, e.clientY);
+  if (c) { drag = { can: c, lx: e.clientX, ly: e.clientY }; document.body.style.cursor = 'grabbing'; }
+});
+addEventListener('pointerup', () => { if (drag) { drag = null; document.body.style.cursor = ''; } });
+
+const clock = new THREE.Clock();
+let t = 0;
+function frame(){
+  const dt = Math.min(clock.getDelta(), 0.05);
+  t += reduce ? dt * 0.15 : dt;
+
+  if (logo) {
+    const r = rect('slot-logo');
+    logo.position.copy(toWorld(r.x, r.y + Math.sin(t * 0.9) * 5, 0));
+    logo.scale.setScalar((r.w / pxPerWorld(0)) / 6.06);
+    logo.rotation.y = lerp(logo.rotation.y, mouse.nx * 0.35, 0.06);
+    logo.rotation.x = lerp(logo.rotation.x, mouse.ny * 0.18 + Math.sin(t * 0.7) * 0.03, 0.06);
+  }
+
+  const sab = document.getElementById('sabores').getBoundingClientRect().top;
+  const k = smooth(H * 0.95, H * 0.15, sab);
+  stage.style.zIndex = k > 0.5 ? 2 : 0;   /* portada: latas detrás del texto; tarjetas: delante */
+  for (const c of cans) {
+    const a = rect(c.hero), b = rect(c.card);
+    /* deriva lenta, como en gravedad cero */
+    const dxh = (Math.sin(t * 0.37 + c.phase) * 26 + Math.sin(t * 0.23 + c.phase * 2) * 14) * (1 - k);
+    const dyh = (Math.sin(t * 0.31 + c.phase * 1.3) * 22 + Math.sin(t * 0.19 + c.phase) * 12) * (1 - k);
+    const x = lerp(a.x, b.x, k) + dxh, y = lerp(a.y, b.y, k) + dyh;
+    const len = lerp(Math.max(a.w, a.h) * (W <= 760 ? 1.5 : 2.3), b.h * 0.97, k);   /* pantallas angostas: latas más pequeñas */   /* latas de portada al doble */
+    c.pivot.position.copy(toWorld(x, y, 0));
+    c.pivot.scale.setScalar((len / pxPerWorld(0)) / 1.9);
+    /* portada: giro libre en los tres ejes; tarjeta: de pie, girando sobre su eje */
+    const sp = reduce ? 0.15 : 1;
+    const w = new THREE.Vector3(Math.sin(t * 0.13 + c.phase) * 0.38, 0.42 + Math.sin(t * 0.07 + c.phase) * 0.14, Math.cos(t * 0.11 + c.phase) * 0.32).multiplyScalar(sp).add(c.kick);
+    c.kick.multiplyScalar(0.96);
+    const ang = w.length() * dt;
+    if (ang > 0) c.tq.premultiply(new THREE.Quaternion().setFromAxisAngle(w.clone().normalize(), ang)).normalize();
+    if (!drag || drag.can !== c) { c.vel *= 0.95; c.spin += c.vel + dt * (reduce ? 0.05 : 0.3); }
+    const qCard = new THREE.Quaternion().setFromEuler(new THREE.Euler(0.1, c.spin, 0, 'ZXY'));
+    c.body.quaternion.copy(c.tq).slerp(qCard, k);
+  }
+
+  renderer.clear();
+  renderer.render(scene, cam);
+  renderer.clearDepth();
+  renderer.render(logoScene, cam);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

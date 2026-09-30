@@ -102,8 +102,8 @@ nav.top{display:flex;align-items:center;justify-content:space-between;gap:12px;p
   .s-alc{width:116px;height:116px;left:calc(50% - 58px);top:36%}
   .sticker b{font-size:38px}
   .sticker small{font-size:11px}
-  .s-az{width:108px;height:108px;left:calc(50% - 54px);top:59%}
-  .s-cal{display:none}
+  .s-az{width:108px;height:108px;left:calc(50% - 54px);top:62%}
+  .s-cal{top:53.5%;padding:11px 18px;font-size:15px}
 }
 
 /* ---- sabores ---- */
@@ -135,6 +135,9 @@ nav.top{display:flex;align-items:center;justify-content:space-between;gap:12px;p
 .chip:nth-child(4){transform:rotate(3deg)}
 .copy p{margin:0;color:var(--teal);max-width:22em;font:500 22px/1.3 var(--body);letter-spacing:-.01em}
 .copy .row{display:flex;gap:10px;flex-wrap:wrap}
+.copy{grid-row:1}
+.buy-row{grid-column:-2/-1;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:-8px}
+@media (max-width:1040px){.buy-row{grid-column:1/-1;margin-top:0}.buy-row .pill.ig{box-shadow:inset 0 0 0 3px var(--teal)}}
 
 /* tarjetas: idénticas al diseño del lienzo (292 × 570, radio 40, borde 1px, lata que sobresale 190px) */
 .cards{display:flex;gap:32px;flex-wrap:wrap;justify-content:center;padding-top:190px}
@@ -194,6 +197,9 @@ footer .credits a:hover{color:var(--ice)}
 .story-box{max-width:820px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center}
 .story h2{margin:0;color:var(--ice);-webkit-text-stroke:clamp(2px,.28vw,4px) var(--teal);paint-order:stroke fill;font:900 clamp(36px,5vw,72px)/.9 var(--display);font-stretch:125%;text-transform:uppercase;text-wrap:balance}
 .story p{margin:0;max-width:60ch;color:var(--teal);font:400 clamp(17px,1.4vw,20px)/1.55 var(--body)}
+
+@media (max-width:560px){nav.top{gap:8px;padding-inline:16px}.nav-actions{gap:6px}.nav-actions .pill{padding:0 11px;min-height:40px;font-size:10px;letter-spacing:.02em}.nav-actions .ig-link{padding:0;width:40px;flex:none;justify-content:center}.nav-actions .ig-link span{display:none}.brand .mark{width:40px;height:40px}}
+@media (max-width:350px){.nav-actions .pill{padding:0 8px;font-size:9.5px}.nav-actions .ig-link{width:36px;min-height:36px;padding:0}.brand .mark{width:32px;height:32px}}
 </style>
 </head>
 <body>
@@ -238,6 +244,7 @@ footer .credits a:hover{color:var(--ice)}
     <div class="nav-actions">
       <a class="pill ig" href="#historia">Nuestra historia</a>
       <a class="pill ig" href="#sabores">Ver sabores</a>
+      <a class="pill ig ig-link" href="https://www.instagram.com/awamala.drinks/" target="_blank" rel="noopener" aria-label="Instagram @awamala.drinks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor"></circle></svg><span>@awamala.drinks</span></a>
     </div>
   </nav>
 </header>
@@ -253,12 +260,7 @@ footer .credits a:hover{color:var(--ice)}
     <div class="slot can-slot-hero" id="slot-hero-toronja"></div>
     <div class="sticker s-alc" aria-hidden="true"><b>5%</b><small>ALC. VOL.</small></div>
     <div class="sticker s-az" aria-hidden="true"><b>0g</b><small>AZÚCAR</small></div>
-    <div class="hero-copy">
-      <!-- <p>Agua carbonatada. Alcohol. Sabor natural. Cero azúcar.</p> (oculto por ahora) -->
-      <div class="row">
-        <a class="pill ig" href="https://www.instagram.com/awamala.drinks/" target="_blank" rel="noopener">@awamala.drinks</a>
-      </div>
-    </div>
+    <!-- <div class="hero-copy"><p>Agua carbonatada. Alcohol. Sabor natural. Cero azúcar.</p></div> (oculto por ahora) -->
   </section>
 
   <section class="flavors" id="sabores" aria-labelledby="t-sabores">
@@ -269,12 +271,6 @@ footer .credits a:hover{color:var(--ice)}
         <h2 id="t-sabores">Se reportan Awamalas</h2>
         <h3>¿Qué es un Hard Seltzer?</h3>
         <div class="chips"><span class="chip">Agua carbonatada</span><span class="chip">Alcohol</span><span class="chip">Sabor natural</span><span class="chip">Cero azúcar</span></div>
-        <div class="row">
-          <a class="pill ig" href="https://api.whatsapp.com/send/?phone=593984024742&amp;type=phone_number&amp;app_absent=0" target="_blank" rel="noopener">Dónde comprar</a>
-          <a class="pill ig" href="https://www.instagram.com/awamala.drinks/" target="_blank" rel="noopener" style="text-transform:none">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor"></circle></svg>
-            @awamala.drinks</a>
-        </div>
       </div>
       <div class="cards" id="tarjetas">
         <article class="card passion">
@@ -291,6 +287,12 @@ footer .credits a:hover{color:var(--ice)}
           <ul class="specs"><li>5% ALC.</li><li>92 CAL</li><li>0 G AZÚCAR</li></ul>
           <a class="cta" href="https://api.whatsapp.com/send/?phone=593984024742&amp;type=phone_number&amp;app_absent=0" target="_blank" rel="noopener">Comprar</a>
         </article>
+      </div>
+      <div class="buy-row" hidden><!-- oculto por ahora -->
+        <a class="pill ig" href="https://api.whatsapp.com/send/?phone=593984024742&amp;type=phone_number&amp;app_absent=0" target="_blank" rel="noopener">Dónde comprar</a>
+        <a class="pill ig" href="https://www.instagram.com/awamala.drinks/" target="_blank" rel="noopener" style="text-transform:none">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor"></circle></svg>
+          @awamala.drinks</a>
       </div>
     </div>
   </section>

@@ -198,8 +198,126 @@ footer .credits a:hover{color:var(--ice)}
 .story-box{max-width:820px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center}
 .story h2{margin:0;color:var(--ice);-webkit-text-stroke:clamp(2px,.28vw,4px) var(--teal);paint-order:stroke fill;font:900 clamp(36px,5vw,72px)/.9 var(--display);font-stretch:125%;text-transform:uppercase;text-wrap:balance}
 .story p{margin:0;max-width:60ch;color:var(--teal);font:400 clamp(17px,1.4vw,20px)/1.55 var(--body)}
+/* tablero a sangre: foto media pantalla | texto; la segunda fila se invierte */
+.story{padding-inline:0}
+.story-box{padding-inline:clamp(16px,4vw,64px);margin-bottom:clamp(32px,4vw,56px)}
+.story-banner{position:relative;display:grid;min-height:clamp(340px,38vw,640px)}
+.story-banner > *{grid-area:1/1}
+.story-banner .photo-slot{min-height:0;align-items:end;justify-items:end;padding:18px 22px}
+.photo-slot.dark{background:linear-gradient(135deg,#0f5f7c,#3f97c2 55%,#9fd4f0);box-shadow:none}
+.photo-slot.dark span{color:var(--ice)}
+.banner-copy{position:relative;place-self:center;display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1vw,16px);padding:24px 16px;text-align:center;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.28);pointer-events:none}
+.banner-copy p{margin:0;font:500 clamp(18px,2.2vw,34px)/1 var(--body);letter-spacing:.04em}
+.banner-copy sup{font-size:.5em;margin-left:2px}
+.banner-copy strong{font:900 clamp(44px,7.4vw,124px)/.92 var(--display);font-stretch:125%;text-transform:uppercase;text-wrap:balance}
+.story-split{display:grid;grid-template-columns:1fr 1fr;min-height:min(44vw,720px)}
+.story-split.flip .photo-slot{order:2}
+.photo-slot{margin:0;display:grid;place-items:center;min-height:320px;background:rgba(238,248,255,.55);background-image:repeating-linear-gradient(-45deg,rgba(15,95,124,.05) 0 14px,transparent 14px 28px)}
+.photo-slot span{color:var(--teal);font:700 12px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+.photo-slot img{width:100%;height:100%;object-fit:cover;display:block}
+.story-text{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:20px;padding:clamp(40px,6vw,110px) clamp(24px,6vw,110px);background:var(--ice);text-align:left}
+.story-text h3{margin:0;color:var(--teal);font:900 clamp(30px,3.6vw,56px)/.98 var(--display);font-stretch:125%;text-transform:uppercase;text-wrap:balance;max-width:14ch}
+.story-text p{margin:0;max-width:46ch;color:var(--teal);font:400 clamp(16px,1.3vw,20px)/1.5 var(--body)}
+.story-text p b{font-weight:800;letter-spacing:.02em}
+.story-btn{display:inline-flex;align-items:center;justify-content:center;min-height:54px;min-width:min(260px,100%);padding:0 32px;margin-top:8px;background:var(--teal);color:var(--ice);font:700 14px/1 var(--body);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;transition:background .15s ease}
+.story-btn:hover{background:#0b4a61}
+@media (max-width:760px){
+  .story-split,.story-split.flip{grid-template-columns:1fr;min-height:0}
+  .story-split.flip .photo-slot{order:0}
+  .photo-slot{aspect-ratio:4/3;min-height:0}
+  .story-text{padding:36px 20px 44px}
+  .story-btn{align-self:stretch}
+}
+
+/* ---- pedido ---- */
+.pill.ig.solid{background:var(--teal);color:var(--ice)}
+.pill.ig.solid:hover{background:#0b4a61}
+.buy-row .pill{min-height:52px;padding:0 30px;font-size:14px}
+.order{padding-inline:clamp(16px,4vw,64px);padding-block:0 clamp(90px,10vw,140px);scroll-margin-top:12px}
+.order-box{max-width:720px;margin:0 auto;padding:clamp(24px,4vw,48px);border-radius:clamp(28px,3.4vw,44px);background:var(--ice);box-shadow:inset 0 0 0 2px var(--teal);display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;color:var(--teal)}
+.order h2{margin:0;color:var(--ice);-webkit-text-stroke:clamp(2px,.28vw,4px) var(--teal);paint-order:stroke fill;font:900 clamp(34px,5vw,64px)/.9 var(--display);font-stretch:125%;text-transform:uppercase;text-wrap:balance}
+.order .lead{margin:0;max-width:44ch;font:400 clamp(15px,1.3vw,18px)/1.5 var(--body)}
+#order-form{width:100%;display:flex;flex-direction:column;gap:18px;align-items:stretch}
+.qrows{display:flex;flex-direction:column;gap:10px}
+.qrow{display:flex;align-items:center;gap:14px;padding:12px 12px 12px 16px;border-radius:24px;box-shadow:inset 0 0 0 2px var(--teal);text-align:left}
+.qrow.passion{background:var(--sun)}
+.qrow.toronja{background:var(--pink)}
+.qrow .swatch{display:none}
+.qname{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.qname b{font:400 clamp(20px,2.4vw,26px)/1 var(--card-display);color:var(--ice);-webkit-text-stroke:1.5px var(--teal);paint-order:stroke fill}
+.qname small{font:500 12.5px/1.3 var(--body);color:var(--teal)}
+.stepper{display:flex;align-items:center;gap:4px;padding:4px;border-radius:1600px;background:var(--ice);box-shadow:inset 0 0 0 2px var(--teal)}
+.stepper button{width:40px;height:40px;border:0;border-radius:50%;background:var(--teal);color:var(--ice);font:700 22px/1 var(--body);cursor:pointer;touch-action:manipulation}
+.stepper button:hover{background:#0b4a61}
+.stepper input{width:52px;height:40px;border:0;background:transparent;text-align:center;color:var(--teal);font:700 18px/1 var(--body);-moz-appearance:textfield;appearance:textfield}
+.stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.presets{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.chip-btn{min-height:40px;padding:0 16px;border:0;border-radius:1600px;background:var(--paper);color:var(--teal);box-shadow:inset 0 0 0 2px var(--teal);font:700 13px/1 var(--body);cursor:pointer}
+.chip-btn:hover{background:var(--teal);color:var(--ice)}
+.meter{display:flex;flex-direction:column;gap:8px;align-items:center}
+.meter .bar{width:100%;height:12px;border-radius:1600px;background:var(--paper);box-shadow:inset 0 0 0 2px var(--teal);overflow:hidden}
+.meter .bar i{display:block;height:100%;width:0;background:var(--teal);border-radius:1600px;transition:width .3s ease}
+.meter p{margin:0;font:600 14px/1.3 var(--body)}
+.meter.ok p{color:#0b6b46}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px;text-align:left}
+.fields label{display:flex;flex-direction:column;gap:6px;font:600 13px/1.2 var(--body);color:var(--teal)}
+.fields label span{font-weight:400;opacity:.8}
+.fields input{min-height:48px;padding:0 16px;border:0;border-radius:16px;background:var(--paper);box-shadow:inset 0 0 0 2px var(--teal);color:var(--ink);font:400 16px/1 var(--body)}   /* 16px: iPhone no hace zoom al escribir */
+.fields input:focus{outline:3px solid var(--violet);outline-offset:1px}
+.form-err{margin:0;color:#b42318;font:600 14px/1.35 var(--body)}
+.cta.big{min-height:56px;padding:0 32px;border:0;align-self:center;background:var(--teal);color:var(--ice);font-size:15px;cursor:pointer}
+.cta.big:hover{background:#0b4a61}
+.order .fine{margin:0;font:500 12px/1.4 var(--body);opacity:.8}
+@media (max-width:560px){.fields{grid-template-columns:1fr}.qrow{padding:10px 10px 10px 14px;gap:10px}.stepper button{width:38px;height:38px}.stepper input{width:44px}}
+
+/* ---- proforma (formato Lasso adaptado a AWAMALA) ---- */
+.pf-modal{position:fixed;inset:0;z-index:60;background:rgba(220,238,255,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.pf-scroll{min-height:100%;display:flex;flex-direction:column;align-items:center;gap:18px;padding:clamp(16px,4vw,40px) 12px calc(28px + env(safe-area-inset-bottom,0px))}
+.proforma{position:relative;overflow:hidden;width:min(794px,100%);padding:clamp(22px,5vw,56px);background:var(--paper);color:#1d2a30;border-radius:6px;box-shadow:0 0 0 1px rgba(15,95,124,.25),0 24px 60px rgba(15,95,124,.18);font:400 13px/1.45 var(--body);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pf-bg{position:absolute;right:-12%;bottom:-6%;width:78%;opacity:.09;pointer-events:none;transform:rotate(-12deg)}
+.proforma > *:not(.pf-bg){position:relative}
+.pf-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.pf-logo{color:var(--teal)}
+.pf-logo b{display:block;font:900 clamp(26px,5.4vw,42px)/.9 var(--display);font-stretch:125%}
+.pf-logo i{display:block;font:300 clamp(9px,1.5vw,12px)/1 var(--body);font-style:normal;letter-spacing:.62em;margin-top:6px}
+.pf-num{text-align:right}
+.pf-num h2{margin:0;color:var(--teal);font:700 clamp(15px,2.4vw,20px)/1 var(--body);letter-spacing:.18em}
+.pf-num p{margin:4px 0 0;font-size:12px}
+.pf-addr{margin:14px 0 0;padding-bottom:12px;border-bottom:2px solid var(--teal);font-size:11.5px;color:#4b5b62}
+.pf-parties{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+.pf-parties h3,.pf-pay h3{margin:0 0 4px;color:var(--teal);font:700 11px/1 var(--body);letter-spacing:.14em;text-transform:uppercase}
+.pf-parties p{margin:0}
+.pf-table{width:100%;margin-top:20px;border-collapse:collapse}
+.pf-table th{padding:9px 10px;background:#e4edf1;color:#1d2a30;font:700 11px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;text-align:right}
+.pf-table th:first-child,.pf-table td:first-child{text-align:left}
+.pf-table td{padding:10px;border-bottom:1px solid #d6e2e8;vertical-align:top;text-align:right;white-space:nowrap}
+.pf-table td:first-child{white-space:normal}
+.pf-table td b{font-weight:600}
+.pf-table ul{margin:4px 0 0;padding-left:16px;color:#4b5b62;font-size:11.5px}
+.pf-totals{margin:10px 0 0 auto;width:min(300px,100%);display:grid;grid-template-columns:1fr auto;gap:6px 18px}
+.pf-totals span:nth-child(odd){color:#4b5b62}
+.pf-totals span:nth-child(even){text-align:right}
+.pf-totals .tot{padding-top:8px;border-top:2px solid var(--teal);color:var(--teal)!important;font-weight:700;font-size:15px}
+.pf-pay{margin-top:22px;padding:14px 16px;border-radius:10px;background:rgba(228,237,241,.7)}
+.pf-pay p{margin:0}
+.pf-notes{margin:18px 0 0;padding-left:18px;color:#4b5b62;font-size:11px}
+.pf-foot{margin:16px 0 0;font-size:10.5px;color:#7a8a91}
+.pf-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.cta.wa{min-height:52px;padding:0 26px;border:0;background:#1f9d55;color:#fff}
+.cta.wa:hover{background:#178246}
+@media (max-width:560px){.pf-parties{grid-template-columns:1fr}.pf-table th,.pf-table td{padding:8px 6px}.pf-actions{flex-direction:column;align-items:stretch;width:100%}}
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff}
+  body > *:not(#pf-modal){display:none!important}
+  .pf-modal{position:static;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;overflow:visible}
+  .pf-scroll{padding:0}
+  .pf-actions{display:none}
+  .proforma{width:100%;box-shadow:none;border-radius:0;padding:0}
+}
 
 @media (max-width:560px){nav.top{gap:8px;padding-inline:16px}.nav-actions{gap:6px}.nav-actions .pill{padding:0 11px;min-height:40px;font-size:10px;letter-spacing:.02em}.nav-actions .ig-link{padding:0;width:40px;flex:none;justify-content:center}.nav-actions .ig-link span{display:none}.brand .mark{width:40px;height:40px}}
+@media (max-width:560px){.nav-actions .nav-sabores{display:none}}
 @media (max-width:350px){.nav-actions .pill{padding:0 8px;font-size:9.5px}.nav-actions .ig-link{width:36px;min-height:36px;padding:0}.brand .mark{width:32px;height:32px}}
 </style>
 </head>
@@ -244,7 +362,8 @@ footer .credits a:hover{color:var(--ice)}
     <a class="brand" href="#inicio" aria-label="AWAMALA, inicio"><span class="mark"><canvas id="mark3d" width="92" height="92" aria-hidden="true"></canvas><svg class="mark-svg" width="30" height="30" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 15.5C5 9 10 4.5 16 4.5S27 9 27 15.5c-1.8 1.2-3.7 1.2-5.5 0-1.8 1.2-3.7 1.2-5.5 0-1.8 1.2-3.7 1.2-5.5 0-1.8 1.2-3.7 1.2-5.5 0Z" fill="currentColor"/><path d="M9.5 17.5c-1.2 2.2 1.2 3.8 0 6s1.2 3.8 0 5.5"/><path d="M14 17.8c-1 2.3 1 3.9 0 6.2"/><path d="M18 17.8c1 2.3-1 3.9 0 6.2s-1 3.6 0 5"/><path d="M22.5 17.5c1.2 2.2-1.2 3.8 0 6"/></svg></span><span class="word">AWAMALA</span></a>
     <div class="nav-actions">
       <a class="pill ig" href="#historia">Nuestra historia</a>
-      <a class="pill ig" href="#sabores">Ver sabores</a>
+      <a class="pill ig nav-sabores" href="#sabores">Ver sabores</a>
+      <a class="pill ig solid" href="#pedido">Pedir</a>
       <a class="pill ig ig-link" href="https://www.instagram.com/awamala.drinks/" target="_blank" rel="noopener" aria-label="Instagram @awamala.drinks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor"></circle></svg><span>@awamala.drinks</span></a>
     </div>
   </nav>
@@ -267,7 +386,7 @@ footer .credits a:hover{color:var(--ice)}
   <section class="flavors" id="sabores" aria-labelledby="t-sabores">
     <div class="wrap">
       <div class="copy" id="que-es">
-        <div class="jelly" id="jelly" aria-hidden="true"><div class="bob"><canvas id="jelly3d"></canvas><img src="img/medusa.webp" alt=""></div></div>
+        <div class="jelly" id="jelly" aria-hidden="true"><div class="bob"><canvas id="jelly3d"></canvas><img src="img/medusa_azul.webp" alt=""></div></div>
         <button class="sr" id="jelly-btn" type="button">Hacer nadar a la medusa</button>
         <h2 id="t-sabores">Se reportan Awamalas</h2>
         <h3>¿Qué es un Hard Seltzer?</h3>
@@ -287,18 +406,79 @@ footer .credits a:hover{color:var(--ice)}
           <ul class="specs"><li>5% ALC.</li><li>92 CAL</li><li>0 G AZÚCAR</li></ul>
         </article>
       </div>
-      <div class="buy-row" hidden><!-- oculto por ahora -->
-        <a class="pill ig" href="https://api.whatsapp.com/send/?phone=593984024742&amp;type=phone_number&amp;app_absent=0" target="_blank" rel="noopener">Dónde comprar</a>
+      <div class="buy-row">
+        <a class="pill ig solid" href="#pedido">Hacer pedido</a>
         <a class="pill ig" href="https://www.instagram.com/awamala.drinks/" target="_blank" rel="noopener" style="text-transform:none">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor"></circle></svg>
           @awamala.drinks</a>
       </div>
     </div>
   </section>
+  <section class="order" id="pedido" aria-labelledby="t-pedido">
+    <div class="order-box">
+      <h2 id="t-pedido">Haz tu pedido</h2>
+      <p class="lead">Elige tus latas, generamos tu proforma y la envías al WhatsApp de AWAMALA para confirmar.</p>
+      <form id="order-form" novalidate>
+        <div class="qrows">
+          <div class="qrow passion">
+            <span class="swatch" aria-hidden="true"></span>
+            <div class="qname"><b>Passion Fruit</b><small>Lata 330 ml · maracuyá</small></div>
+            <div class="stepper"><button type="button" data-f="passion" data-d="-1" aria-label="Quitar una lata Passion Fruit">−</button><input id="q-passion" type="number" inputmode="numeric" min="0" max="999" value="0" aria-label="Latas Passion Fruit"><button type="button" data-f="passion" data-d="1" aria-label="Agregar una lata Passion Fruit">+</button></div>
+          </div>
+          <div class="qrow toronja">
+            <span class="swatch" aria-hidden="true"></span>
+            <div class="qname"><b>Toronja</b><small>Lata 330 ml · toronja</small></div>
+            <div class="stepper"><button type="button" data-f="toronja" data-d="-1" aria-label="Quitar una lata Toronja">−</button><input id="q-toronja" type="number" inputmode="numeric" min="0" max="999" value="0" aria-label="Latas Toronja"><button type="button" data-f="toronja" data-d="1" aria-label="Agregar una lata Toronja">+</button></div>
+          </div>
+        </div>
+        <div class="presets" role="group" aria-label="Pedidos rápidos">
+          <button type="button" class="chip-btn" data-p="8,8">8 + 8</button>
+          <button type="button" class="chip-btn" data-p="16,0">16 Passion Fruit</button>
+          <button type="button" class="chip-btn" data-p="0,16">16 Toronja</button>
+        </div>
+        <div class="meter" aria-live="polite"><div class="bar"><i id="meter-fill"></i></div><p id="meter-txt">Pedido mínimo: 16 latas.</p></div>
+        <div class="fields">
+          <label>Nombre y apellido *<input id="f-nombre" autocomplete="name" required></label>
+          <label>Ciudad *<input id="f-ciudad" autocomplete="address-level2" required></label>
+          <label>Cédula o RUC <span>(opcional, para factura)</span><input id="f-ruc" inputmode="numeric"></label>
+          <label>Dirección de entrega <span>(opcional)</span><input id="f-dir" autocomplete="street-address"></label>
+        </div>
+        <p class="form-err" id="form-err" role="alert" hidden></p>
+        <button class="cta big" id="make-pf" type="submit">Generar proforma</button>
+        <p class="fine">Pedido mínimo 16 latas · Venta solo a mayores de 18 años</p>
+      </form>
+    </div>
+  </section>
+
   <section class="story" id="historia" aria-labelledby="t-historia">
     <div class="story-box">
       <h2 id="t-historia">Nuestra historia</h2>
-      <p>Próximamente.</p>
+    </div>
+    <!-- banner a sangre con texto centrado (ref. White Claw "Grab life by the claw"); la foto llega después -->
+    <div class="story-banner">
+      <figure class="photo-slot dark"><span>Foto próximamente</span></figure>
+      <div class="banner-copy"><p>AWAMALA<sup>®</sup></p><strong>Drink smart.</strong></div>
+    </div>
+    <!-- foto | texto, como la sección "Better vibes" de White Claw -->
+    <div class="story-split">
+      <figure class="photo-slot"><span>Foto próximamente</span></figure>
+      <div class="story-text">
+        <h3>Lorem ipsum dolor sit amet</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+        <p>Lorem ipsum dolor sit amet.<br>Consectetur adipiscing elit.<br>Sed do eiusmod tempor.</p>
+        <p>Sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <a class="story-btn" href="#sabores">Ver sabores</a>
+      </div>
+    </div>
+    <!-- texto | foto, como "Drinks like no others" de White Claw -->
+    <div class="story-split flip">
+      <figure class="photo-slot"><span>Foto próximamente</span></figure>
+      <div class="story-text">
+        <h3>Lorem ipsum dolor</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+        <p>Sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      </div>
     </div>
   </section>
 </main>
@@ -315,6 +495,134 @@ footer .credits a:hover{color:var(--ice)}
   </div>
 </footer>
 <div class="loading" id="loading" role="status">Cargando latas…</div>
+
+<div class="pf-modal" id="pf-modal" role="dialog" aria-modal="true" aria-labelledby="pf-title" hidden>
+  <div class="pf-scroll">
+    <article class="proforma" id="proforma">
+      <img class="pf-bg" src="img/medusa_azul.webp" alt="">
+      <header class="pf-head">
+        <div class="pf-logo"><b>AWAMALA</b><i>HARD SELTZER</i></div>
+        <div class="pf-num"><h2 id="pf-title">PROFORMA</h2><p>N.° <span id="pf-n"></span></p><p>Fecha: <span id="pf-fecha"></span></p></div>
+      </header>
+      <p class="pf-addr">ECUADRINKS S.A.S. · Guayaquil, Ecuador · WhatsApp +593 98 402 4742 · @awamala.drinks</p>
+      <div class="pf-parties">
+        <div><h3>Proforma para</h3><p id="pf-cliente"></p></div>
+        <div><h3>Por</h3><p><b>AWAMALA Hard Seltzer</b><br>Distribuido por ECUADRINKS S.A.S.</p></div>
+      </div>
+      <table class="pf-table">
+        <thead><tr><th>Descripción</th><th>Cant.</th><th>P. unit.</th><th>Total</th></tr></thead>
+        <tbody id="pf-items"></tbody>
+      </table>
+      <div class="pf-totals" id="pf-totals"></div>
+      <section class="pf-pay">
+        <h3>Orden de pago</h3>
+        <p id="pf-pay-txt"></p>
+      </section>
+      <ol class="pf-notes">
+        <li>Pedido mínimo: 16 latas.</li>
+        <li>Venta exclusiva para mayores de 18 años.</li>
+        <li>Proforma sujeta a confirmación de stock por parte de AWAMALA.</li>
+        <li>Costo y fecha de entrega se coordinan por WhatsApp.</li>
+      </ol>
+      <p class="pf-foot">Bebe con responsabilidad. El consumo excesivo de alcohol perjudica tu salud.</p>
+    </article>
+    <div class="pf-actions">
+      <a class="cta wa" id="pf-wa" href="#" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.5-.3Z"/></svg>Enviar a WhatsApp</a>
+      <button class="pill ig" id="pf-pdf" type="button">Descargar PDF</button>
+      <button class="pill ig" id="pf-close" type="button">Editar pedido</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---- pedido → proforma → WhatsApp de AWAMALA ----
+   Ajustar aquí cuando el cliente confirme: precio por lata (USD, sin IVA) y datos de pago. */
+var AW_PEDIDO = {
+  whatsapp: '593984024742',
+  minimo: 16,
+  precioLata: null,          /* p. ej. 2.50 · null = "por confirmar" */
+  iva: 0.15,
+  pago: 'Pago por transferencia bancaria. AWAMALA te envía los datos de pago por WhatsApp al confirmar el stock de tu pedido.'
+};
+(function(){
+  var C = AW_PEDIDO, q = { passion: document.getElementById('q-passion'), toronja: document.getElementById('q-toronja') };
+  var NAMES = { passion: 'Passion Fruit', toronja: 'Toronja' };
+  var fill = document.getElementById('meter-fill'), mtxt = document.getElementById('meter-txt'), meter = fill.closest('.meter');
+  var err = document.getElementById('form-err'), modal = document.getElementById('pf-modal');
+  function n(k){ var v = parseInt(q[k].value, 10); return isNaN(v) || v < 0 ? 0 : Math.min(v, 999); }
+  function total(){ return n('passion') + n('toronja'); }
+  function money(v){ return '$' + v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function update(){
+    var t = total(), f = Math.min(1, t / C.minimo);
+    fill.style.width = (f * 100) + '%';
+    meter.classList.toggle('ok', t >= C.minimo);
+    mtxt.textContent = t >= C.minimo ? t + ' latas · ¡listo para generar tu proforma!'
+      : t === 0 ? 'Pedido mínimo: ' + C.minimo + ' latas.'
+      : t + ' latas · te faltan ' + (C.minimo - t) + ' para el pedido mínimo.';
+    if (t >= C.minimo && err.dataset.k === 'min') err.hidden = true;
+  }
+  document.querySelectorAll('.stepper button').forEach(function(b){
+    b.addEventListener('click', function(){ var k = b.dataset.f; q[k].value = Math.max(0, n(k) + Number(b.dataset.d)); update(); });
+  });
+  Object.keys(q).forEach(function(k){ q[k].addEventListener('input', update); q[k].addEventListener('blur', function(){ q[k].value = n(k); update(); }); });
+  document.querySelectorAll('.presets [data-p]').forEach(function(b){
+    b.addEventListener('click', function(){ var p = b.dataset.p.split(','); q.passion.value = p[0]; q.toronja.value = p[1]; update(); });
+  });
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]; }); }
+  function pad(x){ return String(x).padStart(2, '0'); }
+
+  document.getElementById('order-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    var nombre = document.getElementById('f-nombre').value.trim(), ciudad = document.getElementById('f-ciudad').value.trim();
+    var ruc = document.getElementById('f-ruc').value.trim(), dir = document.getElementById('f-dir').value.trim();
+    if (total() < C.minimo){ err.textContent = 'El pedido mínimo es de ' + C.minimo + ' latas. Llevas ' + total() + '.'; err.dataset.k = 'min'; err.hidden = false; return; }
+    if (!nombre || !ciudad){ err.textContent = 'Escribe tu nombre y tu ciudad para generar la proforma.'; err.dataset.k = 'f'; err.hidden = false; (nombre ? document.getElementById('f-ciudad') : document.getElementById('f-nombre')).focus(); return; }
+    err.hidden = true;
+
+    var d = new Date();
+    var num = 'AW-' + String(d.getFullYear()).slice(2) + pad(d.getMonth() + 1) + pad(d.getDate()) + '-' + pad(d.getHours()) + pad(d.getMinutes());
+    var fecha = d.toLocaleDateString('es-EC', { day: '2-digit', month: 'long', year: 'numeric' });
+    document.getElementById('pf-n').textContent = num;
+    document.getElementById('pf-fecha').textContent = fecha;
+    document.getElementById('pf-cliente').innerHTML = '<b>' + esc(nombre) + '</b>' + (ruc ? '<br>C.I./RUC: ' + esc(ruc) : '') + '<br>' + esc(ciudad) + (dir ? '<br>' + esc(dir) : '');
+
+    var P = C.precioLata, rows = '', sub = 0, lines = [];
+    ['passion', 'toronja'].forEach(function(k){
+      var c = n(k); if (!c) return;
+      var tot = P == null ? null : c * P; if (tot != null) sub += tot;
+      rows += '<tr><td><b>AWAMALA Hard Seltzer · ' + NAMES[k] + '</b><ul><li>Lata 330 ml</li><li>5% alc. vol. · 92 cal · 0 g azúcar</li></ul></td><td>' + c + '</td><td>' + (P == null ? 'Por confirmar' : money(P)) + '</td><td>' + (tot == null ? '—' : money(tot)) + '</td></tr>';
+      lines.push('• ' + NAMES[k] + ' × ' + c + (tot == null ? '' : ' = ' + money(tot)));
+    });
+    document.getElementById('pf-items').innerHTML = rows;
+    var tt = document.getElementById('pf-totals');
+    if (P == null){
+      tt.innerHTML = '<span>Total de latas</span><span>' + total() + '</span><span class="tot">Total</span><span class="tot">Por confirmar</span>';
+    } else {
+      var iva = sub * C.iva;
+      tt.innerHTML = '<span>Total de latas</span><span>' + total() + '</span><span>Subtotal</span><span>' + money(sub) + '</span><span>IVA ' + Math.round(C.iva * 100) + '%</span><span>' + money(iva) + '</span><span class="tot">Total</span><span class="tot">' + money(sub + iva) + '</span>';
+    }
+    document.getElementById('pf-pay-txt').textContent = C.pago;
+
+    var msg = 'Hola AWAMALA, quiero hacer este pedido.\n\nProforma N.° ' + num + ' (' + fecha + ')\n' + lines.join('\n') +
+      '\nTotal: ' + total() + ' latas' + (P == null ? '' : ' · ' + money(sub * (1 + C.iva)) + ' con IVA') +
+      '\n\nNombre: ' + nombre + (ruc ? '\nC.I./RUC: ' + ruc : '') + '\nCiudad: ' + ciudad + (dir ? '\nDirección: ' + dir : '') +
+      '\n\nQuedo atento a la orden de pago.';
+    document.getElementById('pf-wa').href = 'https://wa.me/' + C.whatsapp + '?text=' + encodeURIComponent(msg);
+
+    modal.hidden = false; document.documentElement.style.overflow = 'hidden';
+    modal.scrollTop = 0; document.getElementById('pf-wa').focus({ preventScroll: true });
+  });
+  function close(){ modal.hidden = true; document.documentElement.style.overflow = ''; document.getElementById('make-pf').focus({ preventScroll: true }); }
+  document.getElementById('pf-close').addEventListener('click', close);
+  modal.addEventListener('click', function(e){ if (e.target === modal || e.target.classList.contains('pf-scroll')) close(); });
+  addEventListener('keydown', function(e){ if (e.key === 'Escape' && !modal.hidden) close(); });
+  document.getElementById('pf-pdf').addEventListener('click', function(){
+    var t = document.title; document.title = 'Proforma ' + document.getElementById('pf-n').textContent + ' - AWAMALA';
+    window.print(); setTimeout(function(){ document.title = t; }, 500);
+  });
+  update();
+})();
+</script>
 
 <script>
 (function(){
@@ -549,13 +857,14 @@ function startMark(){
   mr.setClearColor(0x000000, 0); mr.setPixelRatio(1); mr.setSize(92, 92, false);
   mr.outputColorSpace = THREE.SRGBColorSpace; mr.toneMapping = THREE.NeutralToneMapping;
   const ms = new THREE.Scene();
-  ms.add(new THREE.HemisphereLight(0xffffff, 0x445566, 1.6));
-  const d = new THREE.DirectionalLight(0xffffff, 1.4); d.position.set(2, 3, 4); ms.add(d);
+  ms.environment = scene.environment;   /* mismas luces que la medusa grande */
+  ms.add(new THREE.HemisphereLight(0xffffff, 0x6a8fb0, 1.2));
+  const d = new THREE.DirectionalLight(0xffffff, 1.6); d.position.set(-3, 4, 5); ms.add(d);
   const mc = new THREE.PerspectiveCamera(30, 1, 0.1, 50); mc.position.set(0, 0, 5.2);
   load('models/medusa.glb.txt').then((g) => {
     const j = g.scene;
     const map = tex('img/tex_medusa.jpg');
-    j.traverse((o) => { if (o.isMesh) { o.material.map = map; o.material.emissive = new THREE.Color(0xff9ccf); o.material.emissiveMap = map; o.material.emissiveIntensity = 0.5; o.material.needsUpdate = true; } });
+    j.traverse((o) => { if (o.isMesh) { glassJelly(o, map, 0.35); o.material.opacity = 0.8; } });   /* celeste de la medusa grande, un poco más opaca para que se lea en pequeño */
     const box = new THREE.Box3().setFromObject(j), c = box.getCenter(new THREE.Vector3()), sz = box.getSize(new THREE.Vector3());
     const holder = new THREE.Group(); j.position.sub(c); holder.add(j);
     holder.scale.setScalar(2.2 / Math.max(sz.x, sz.y, sz.z)); ms.add(holder);

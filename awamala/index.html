@@ -42,7 +42,7 @@ a{color:inherit}
 #stage{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:2;pointer-events:none}
 main,header,footer{position:relative;z-index:1}
 main{overflow-x:clip}
-#bubbles{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none}
+#bubbles{position:fixed;left:0;top:0;width:100%;height:100vh;height:100lvh;display:block;z-index:0;pointer-events:none}
 
 /* ---- marquee ---- */
 .marquee{background:var(--ice);color:var(--teal);border-bottom:2px solid var(--teal);overflow:hidden;height:40px;display:flex;align-items:center;padding-top:env(safe-area-inset-top,0px)}
@@ -201,15 +201,15 @@ footer .credits a:hover{color:var(--ice)}
 /* tablero a sangre: foto media pantalla | texto; la segunda fila se invierte */
 .story{padding-inline:0}
 .story-box{padding-inline:clamp(16px,4vw,64px);margin-bottom:clamp(32px,4vw,56px)}
-.story-banner{position:relative;display:grid;min-height:clamp(340px,38vw,640px)}
+.story-banner{position:relative;display:grid;grid-template-columns:minmax(0,1fr);min-height:clamp(340px,38vw,640px)}
 .story-banner > *{grid-area:1/1}
-.story-banner .photo-slot{min-height:0;align-items:end;justify-items:end;padding:18px 22px}
+.story-banner .photo-slot{aspect-ratio:auto!important;min-height:0;align-items:end;justify-items:end;padding:18px 22px}
 .photo-slot.dark{background:linear-gradient(135deg,#0f5f7c,#3f97c2 55%,#9fd4f0);box-shadow:none}
 .photo-slot.dark span{color:var(--ice)}
 .banner-copy{position:relative;place-self:center;display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1vw,16px);padding:24px 16px;text-align:center;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.28);pointer-events:none}
-.banner-copy p{margin:0;font:500 clamp(18px,2.2vw,34px)/1 var(--body);letter-spacing:.04em}
+.banner-copy p{margin:0;color:#fff;font:500 clamp(18px,2.2vw,34px)/1 var(--body);letter-spacing:.04em}
 .banner-copy sup{font-size:.5em;margin-left:2px}
-.banner-copy strong{font:900 clamp(44px,7.4vw,124px)/.92 var(--display);font-stretch:125%;text-transform:uppercase;text-wrap:balance}
+.banner-copy{max-width:100%}.banner-copy strong{font:900 clamp(32px,10.5vw,124px)/.92 var(--display);font-stretch:125%;text-transform:uppercase;text-wrap:balance}
 .story-split{display:grid;grid-template-columns:1fr 1fr;min-height:min(44vw,720px)}
 .story-split.flip .photo-slot{order:2}
 .photo-slot{margin:0;display:grid;place-items:center;min-height:320px;background:rgba(238,248,255,.55);background-image:repeating-linear-gradient(-45deg,rgba(15,95,124,.05) 0 14px,transparent 14px 28px)}
@@ -268,6 +268,7 @@ footer .credits a:hover{color:var(--ice)}
 .cta.big{min-height:56px;padding:0 32px;border:0;align-self:center;background:var(--teal);color:var(--ice);font-size:15px;cursor:pointer}
 .cta.big:hover{background:#0b4a61}
 .order .fine{margin:0;font:500 12px/1.4 var(--body);opacity:.8}
+@media (max-width:400px){.order-box{padding:22px 14px}.qrow{gap:8px;padding:10px 8px 10px 12px}.stepper{gap:2px;padding:3px}.stepper button{width:34px!important;height:34px!important;font-size:19px}.stepper input{width:34px!important;font-size:16px}.qname small{font-size:11.5px}}
 @media (max-width:560px){.fields{grid-template-columns:minmax(0,1fr)}.qrow{padding:10px 10px 10px 14px;gap:10px}.stepper button{width:38px;height:38px}.stepper input{width:44px}}
 
 /* ---- proforma (formato Lasso adaptado a AWAMALA) ---- */
@@ -306,6 +307,7 @@ footer .credits a:hover{color:var(--ice)}
 .cta.wa{min-height:52px;padding:0 26px;border:0;background:#1f9d55;color:#fff}
 .cta.wa:hover{background:#178246}
 @media (max-width:560px){.pf-parties{grid-template-columns:1fr}.pf-table th,.pf-table td{padding:8px 6px}.pf-actions{flex-direction:column;align-items:stretch;width:100%}}
+@media (max-width:440px){.pf-head{flex-direction:column;gap:12px}.pf-num{text-align:left}.proforma{padding:20px 16px;font-size:12px}.pf-table th{font-size:9.5px;letter-spacing:.04em;padding:7px 4px}.pf-table td{padding:8px 4px;white-space:normal}.pf-table td:not(:first-child){font-size:11.5px}.pf-table ul{font-size:10.5px;padding-left:13px}.pf-brand{display:none}}
 @media print{
   @page{size:A4;margin:12mm}
   body{background:#fff}
@@ -317,7 +319,8 @@ footer .credits a:hover{color:var(--ice)}
 }
 
 @media (max-width:560px){nav.top{gap:8px;padding-inline:16px}.nav-actions{gap:6px}.nav-actions .pill{padding:0 11px;min-height:40px;font-size:10px;letter-spacing:.02em}.nav-actions .ig-link{padding:0;width:40px;flex:none;justify-content:center}.nav-actions .ig-link span{display:none}.brand .mark{width:40px;height:40px}}
-@media (max-width:560px){.nav-actions .nav-sabores{display:none}}
+@media (max-width:900px){.nav-actions .nav-sabores{display:none}}
+@media (max-width:760px){.nav-actions .ig-link{padding:0;width:46px;flex:none}.nav-actions .ig-link span{display:none}}
 @media (max-width:350px){.nav-actions .pill{padding:0 8px;font-size:9.5px}.nav-actions .ig-link{width:36px;min-height:36px;padding:0}.brand .mark{width:32px;height:32px}}
 </style>
 </head>
@@ -590,7 +593,7 @@ var AW_PEDIDO = {
     ['passion', 'toronja'].forEach(function(k){
       var c = n(k); if (!c) return;
       var tot = P == null ? null : c * P; if (tot != null) sub += tot;
-      rows += '<tr><td><b>AWAMALA Hard Seltzer · ' + NAMES[k] + '</b><ul><li>Lata 330 ml</li><li>5% alc. vol. · 92 cal · 0 g azúcar</li></ul></td><td>' + c + '</td><td>' + (P == null ? 'Por confirmar' : money(P)) + '</td><td>' + (tot == null ? '—' : money(tot)) + '</td></tr>';
+      rows += '<tr><td><b><span class="pf-brand">AWAMALA Hard Seltzer · </span>' + NAMES[k] + '</b><ul><li>Lata 330 ml</li><li>5% alc. vol. · 92 cal · 0 g azúcar</li></ul></td><td>' + c + '</td><td>' + (P == null ? 'Por confirmar' : money(P)) + '</td><td>' + (tot == null ? '—' : money(tot)) + '</td></tr>';
       lines.push('• ' + NAMES[k] + ' × ' + c + (tot == null ? '' : ' = ' + money(tot)));
     });
     document.getElementById('pf-items').innerHTML = rows;
@@ -649,72 +652,78 @@ var AW_PEDIDO = {
 })();
 </script>
 <script>
-/* burbujas: al bajar suben repartidas en todo el ancho; cerca del final de la página burbujea como una gaseosa */
+/* burbujas: pocas al inicio; mientras más bajas, más salen, y ya no dejan de salir (el ritmo nunca baja).
+   Rendimiento: cada burbuja es un sprite pre-dibujado (drawImage), tope según el área de pantalla,
+   y el lienzo solo se re-dimensiona una vez por cuadro y solo si de verdad cambia su tamaño. */
 (function(){
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var cv = document.getElementById('bubbles'), ctx = cv.getContext('2d');
-  var W = 0, H = 0, dpr = 1, list = [], lastY = scrollY, last = performance.now(), fizzAcc = 0;
-  var streams = [];
+  var W = 0, H = 0, dpr = 1, list = [], lastY = scrollY, last = performance.now(), acc = 0, maxP = 0, cap = 120, pending = 0;
+  var SPR = [];   /* sprites: chico (trazo más grueso), mediano y grande */
+  function sprite(R, lw){
+    var c = document.createElement('canvas'), px = Math.ceil((R + lw) * 2 * dpr) + 2;
+    c.width = c.height = px; var g = c.getContext('2d'); g.scale(dpr, dpr);
+    var m = px / dpr / 2;
+    g.beginPath(); g.arc(m, m, R, 0, 6.2832); g.fillStyle = 'rgba(238,248,255,.8)'; g.fill();
+    g.lineWidth = lw; g.strokeStyle = 'rgba(15,95,124,.9)'; g.stroke();
+    if (R > 3) { g.beginPath(); g.arc(m - R * .35, m - R * .35, R * .22, 0, 6.2832); g.fillStyle = 'rgba(255,255,255,.9)'; g.fill(); }
+    return { c: c, R: R, half: px / dpr / 2 };
+  }
   function size(){
-    var oW = W, oH = H;
-    dpr = Math.min(devicePixelRatio || 1, 2); W = cv.clientWidth || innerWidth; H = cv.clientHeight || innerHeight;
-    /* al cambiar el tamaño, las burbujas que ya están en pantalla se reacomodan en proporción */
-    if (oW > 0 && oH > 0 && (oW !== W || oH !== H)) {
-      var sx = W / oW, sy = H / oH;
-      for (var k = 0; k < list.length; k++) { list[k].x *= sx; list[k].y *= sy; }
-    }
+    pending = 0;
+    var w = cv.clientWidth || innerWidth, h = cv.clientHeight || innerHeight, d = Math.min(devicePixelRatio || 1, 1.5);
+    if (w === W && h === H && d === dpr) return;   /* con alto 100lvh la barra de Safari no cambia el tamaño */
+    if (W > 0 && H > 0) { var sx = w / W, sy = h / H; for (var k = 0; k < list.length; k++) { list[k].x *= sx; list[k].y *= sy; } }
+    var redo = d !== dpr || !SPR.length;
+    W = w; H = h; dpr = d;
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    streams = []; var n = Math.max(6, Math.round(W / 70));
-    for (var i = 0; i < n; i++) streams.push((i + 0.2 + Math.random() * 0.6) / n);   /* puntos de burbujeo repartidos a lo ancho */
+    cap = Math.round(Math.min(260, Math.max(80, W * H / 6000)));
+    if (redo) SPR = [sprite(4, 1), sprite(10, 1.3), sprite(22, 2.6)];
   }
-  addEventListener('resize', size); size();
-  function add(x, r, vy, amp){
-    if (list.length >= 320) return;
-    list.push({ x: x, y: H + r + Math.random() * 30, r: r, vy: vy, ph: Math.random() * 6.28, amp: amp, life: 0 });
+  function onResize(){ if (!pending) pending = requestAnimationFrame(size); }
+  addEventListener('resize', onResize);
+  if (window.visualViewport) visualViewport.addEventListener('resize', onResize);
+  size();
+  function add(r, vy, amp){
+    if (list.length >= cap) return;
+    list.push({ x: Math.random() * W, y: H + r + Math.random() * 30, r: r, vy: vy, ph: Math.random() * 6.28, amp: amp, life: 0,
+      s: r <= 4.5 ? SPR[0] : r <= 11 ? SPR[1] : SPR[2] });
   }
-  function scrollBubbles(n, boost){
-    for (var i = 0; i < n; i++) {
-      var r = 3 + Math.pow(Math.random(), 1.8) * 20;
-      add(Math.random() * W, r, 70 + Math.random() * 110 + boost, 6 + Math.random() * 16);
-    }
-  }
-  function progress(){   /* 0 arriba de la página, 1 al final */
+  function big(boost){ return add(3 + Math.pow(Math.random(), 1.8) * 20, 70 + Math.random() * 110 + boost, 6 + Math.random() * 16); }
+  function progress(){
     var max = document.documentElement.scrollHeight - innerHeight;
     return max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
   }
   addEventListener('scroll', function(){
     var dy = scrollY - lastY; lastY = scrollY;
-    if (dy > 0 && Math.random() < 0.6) scrollBubbles(Math.min(3, Math.ceil(dy / 40)), Math.min(260, dy * 3));
+    maxP = Math.max(maxP, progress());
+    if (dy > 0 && Math.random() < 0.5) { var n = Math.min(3, Math.ceil(dy / 50)); while (n--) big(Math.min(240, dy * 3)); }
     for (var i = 0; i < list.length; i++) list[i].y -= dy * 0.25;
   }, { passive: true });
   function draw(now){
+    requestAnimationFrame(draw);
     var dt = Math.min((now - last) / 1000, 0.05); last = now;
-    if (Math.abs(cv.clientWidth - W) > 1 || Math.abs(cv.clientHeight - H) > 1) size();
-    /* efervescencia: arranca a mitad de página y crece hasta el final */
-    var fz = Math.max(0, (progress() - 0.45) / 0.55);
-    fizzAcc += dt * fz * fz * 130;
-    while (fizzAcc > 1) {
-      fizzAcc -= 1;
-      var sx = Math.random() * W;   /* repartidas al azar en todo el ancho */
-      add(sx, 1.6 + Math.random() * 4.5, 160 + Math.random() * 180, 1.5 + Math.random() * 3);
+    /* ritmo: ~1.2 burbujas/s arriba → ~56/s al haber llegado al final; nunca baja */
+    acc += dt * (1.2 + 55 * Math.pow(maxP, 1.3));
+    while (acc > 1) {
+      acc -= 1;
+      if (Math.random() < 0.35 + 0.35 * (1 - maxP)) big(0);
+      else add(1.6 + Math.random() * 4.5, 150 + Math.random() * 180, 1.5 + Math.random() * 3);
     }
     ctx.clearRect(0, 0, W, H);
     for (var i = list.length - 1; i >= 0; i--) {
-      var b = list[i]; b.life += dt; b.vy *= 0.997;
-      b.y -= b.vy * dt;
-      var x = b.x + Math.sin(b.life * 2.4 + b.ph) * b.amp;
+      var b = list[i]; b.life += dt; b.vy *= 0.997; b.y -= b.vy * dt;
       var a = Math.min(1, b.life * 3) * Math.max(0, Math.min(1, (b.y + b.r) / (H * 0.35)));
-      if (b.y < -b.r * 2 || (a <= 0 && b.life > 0.5)) { list.splice(i, 1); continue; }
+      if (b.y < -b.r * 2 || b.y > H + 100 || (a <= 0 && b.life > 0.5)) { list[i] = list[list.length - 1]; list.pop(); continue; }   /* las que el scroll empujó fuera por abajo liberan cupo */
+      var x = b.x + Math.sin(b.life * 2.4 + b.ph) * b.amp, k = b.r / b.s.R, h = b.s.half * k;
       ctx.globalAlpha = a;
-      ctx.beginPath(); ctx.arc(x, b.y, b.r, 0, 6.2832);
-      ctx.fillStyle = 'rgba(238,248,255,.8)'; ctx.fill();
-      ctx.lineWidth = Math.max(1, b.r * 0.12); ctx.strokeStyle = 'rgba(15,95,124,.9)'; ctx.stroke();
-      if (b.r > 3) { ctx.beginPath(); ctx.arc(x - b.r * 0.35, b.y - b.r * 0.35, b.r * 0.22, 0, 6.2832); ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.fill(); }
+      ctx.drawImage(b.s.c, x - h, b.y - h, h * 2, h * 2);
     }
     ctx.globalAlpha = 1;
-    requestAnimationFrame(draw);
   }
   requestAnimationFrame(draw);
+  /* arranca con unas pocas ya en pantalla */
+  for (var i = 0; i < 6; i++) { big(0); var b = list[list.length - 1]; if (b) { b.y = H * (0.35 + Math.random() * 0.65); b.life = 1; } }
 })();
 </script>
 
@@ -788,7 +797,7 @@ renderer.autoClear = false;
 
 let W = innerWidth, H = innerHeight;
 function resize(){ W = document.documentElement.clientWidth || innerWidth; H = innerHeight; renderer.setSize(W, H, false);   /* ancho visible real, sin la barra de desplazamiento */ cam.aspect = W / H; cam.updateProjectionMatrix(); }
-addEventListener('resize', resize); resize();
+let rzF = 0; addEventListener('resize', () => { if (!rzF) rzF = requestAnimationFrame(() => { rzF = 0; resize(); }); }); resize();   /* una vez por cuadro aunque lleguen muchos eventos */
 
 const TAN = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
 const pxPerWorld = (z) => H / (2 * (CAMZ - z) * TAN);
@@ -811,7 +820,7 @@ function applyMap(root, map, mr){ /* mr = { mr: metal/rugosidad, em: color de la
     ms.forEach((m) => { if (/Etiqueta/.test(m.name)) {
       m.map = map; m.color.set(0xffffff);
       if (mr) { m.metalnessMap = mr.mr; m.roughnessMap = mr.mr; m.metalness = 1; m.roughness = 1;
-        m.emissiveMap = mr.em; m.emissive.set(0xffffff); m.emissiveIntensity = 0.45; }
+        m.emissiveMap = mr.em; m.emissive.set(0xffffff); m.emissiveIntensity = 0.32; }   /* menos color propio + rugosidad 0.06 = más foil */
       m.needsUpdate = true; } }); } });
 }
 function dataTex(u){ const t = texLoader.load(u); t.flipY = false; t.colorSpace = THREE.NoColorSpace; return t; }
@@ -897,7 +906,7 @@ function startBigJelly(){
     const holder = new THREE.Group(); j.position.sub(c); holder.add(j);
     holder.scale.setScalar(3.1 / Math.max(sz.x, sz.y, sz.z)); js.add(holder);
     document.documentElement.classList.add('jelly3d-on');
-    fit(); addEventListener('resize', fit);
+    fit(); let fitF = 0; addEventListener('resize', () => { if (!fitF) fitF = requestAnimationFrame(() => { fitF = 0; fit(); }); });
     let visible = true, spinV = 0;
     new IntersectionObserver((es) => { visible = es[0].isIntersecting; }).observe(cv);
     addEventListener('jellyswim', (e) => { spinV += (e.detail.dx >= 0 ? 1 : -1) * 0.45; });   /* clic: pequeño giro que vuelve solo */

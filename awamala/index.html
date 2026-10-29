@@ -200,7 +200,7 @@ footer .credits a:hover{color:var(--ice)}
 .story h2{margin:0;color:var(--ice);-webkit-text-stroke:clamp(2px,.28vw,4px) var(--teal);paint-order:stroke fill;font:900 clamp(36px,5vw,72px)/.9 var(--display);font-stretch:125%;text-transform:uppercase;text-wrap:balance}
 .story p{margin:0;max-width:60ch;color:var(--teal);font:400 clamp(17px,1.4vw,20px)/1.55 var(--body)}
 /* tablero a sangre: foto media pantalla | texto; la segunda fila se invierte */
-.story{padding-inline:0}
+.story{padding-inline:0;padding-bottom:0}   /* sin espacio vacío entre el último bloque y el pie */
 .story-box{padding-inline:clamp(16px,4vw,64px);margin-bottom:clamp(32px,4vw,56px)}
 .story-banner{position:relative;isolation:isolate;overflow:hidden;height:clamp(420px,56vw,900px);background:#6f8fb5}
 @media (max-width:760px){.story-banner{height:min(125vw,640px)}}
@@ -745,7 +745,8 @@ var AW_PEDIDO = {
     s = Math.max(Wb / IW, Hb / IH);
     var sw = IW * s, sh = IH * s;
     fy = Wb <= 760 ? 0.56 : 0.64;                                 /* la tapa queda justo bajo "SMART." */
-    offY = clamp(fy * Hb - CAN_TOP * s, Hb - sh, 0);
+    offY = can.hidden ? clamp(-0.06 * sh, Hb - sh, 0)               /* sin lata: foto más abajo para que se vea el nevado */
+                      : clamp(fy * Hb - CAN_TOP * s, Hb - sh, 0);
     offX = clamp(Wb / 2 - CAN_CX * s, Wb - sw, 0);
     stage.style.width = sw + 'px'; stage.style.height = sh + 'px';
     stage.style.left = offX + 'px'; stage.style.top = offY + 'px';   /* sin transform: así el texto puede quedar entre el fondo y la lata */

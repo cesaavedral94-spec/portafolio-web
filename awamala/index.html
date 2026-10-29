@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="AWAMALA Hard Seltzer — agua carbonatada, alcohol, sabor natural, cero azúcar. Passion Fruit y Toronja.">
 <title>AWAMALA Hard Seltzer</title>
+<meta name="referrer" content="origin-when-cross-origin">   <!-- recomendado por Payphone -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,800;125,900&family=Bowlby+One&family=Poppins:wght@300;400;500;600;700&display=swap">
@@ -201,8 +202,14 @@ footer .credits a:hover{color:var(--ice)}
 /* tablero a sangre: foto media pantalla | texto; la segunda fila se invierte */
 .story{padding-inline:0}
 .story-box{padding-inline:clamp(16px,4vw,64px);margin-bottom:clamp(32px,4vw,56px)}
-.story-banner{position:relative;display:grid;grid-template-columns:minmax(0,1fr);min-height:clamp(340px,38vw,640px)}
-.story-banner > *{grid-area:1/1}
+.story-banner{position:relative;isolation:isolate;overflow:hidden;height:clamp(420px,56vw,900px);background:#6f8fb5}
+@media (max-width:760px){.story-banner{height:min(125vw,640px)}}
+.sb-stage{position:absolute;left:0;top:0;width:100%;height:100%}   /* tamaño y posición los calcula el script (como object-fit: cover) */
+.sb-bg{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1}
+.sb-veil{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(6,40,56,.10),rgba(6,40,56,.34));pointer-events:none}
+.sb-can{position:absolute;left:2.85%;top:0;width:53.5%;height:auto;display:block;z-index:3;transform-origin:68.04% 36.2%;will-change:transform;filter:drop-shadow(0 18px 30px rgba(0,0,0,.28))}
+.story-banner .banner-copy{position:absolute;inset:0;margin:auto;height:max-content;z-index:2}
+.story-banner .sb-front{z-index:4;opacity:var(--front,1);will-change:opacity}
 .story-banner .photo-slot{aspect-ratio:auto!important;min-height:0;align-items:end;justify-items:end;padding:18px 22px}
 .photo-slot.dark{background:linear-gradient(135deg,#0f5f7c,#3f97c2 55%,#9fd4f0);box-shadow:none}
 .photo-slot.dark span{color:var(--ice)}
@@ -215,6 +222,9 @@ footer .credits a:hover{color:var(--ice)}
 .photo-slot{margin:0;display:grid;place-items:center;min-height:320px;background:rgba(238,248,255,.55);background-image:repeating-linear-gradient(-45deg,rgba(15,95,124,.05) 0 14px,transparent 14px 28px)}
 .photo-slot span{color:var(--teal);font:700 12px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;opacity:.8}
 .photo-slot img{width:100%;height:100%;object-fit:cover;display:block}
+.photo-slot.has-img{position:relative;padding:0!important;background:#0f5f7c;overflow:hidden;display:block}
+.photo-slot.has-img img{position:absolute;inset:0}
+.story-banner .photo-slot.has-img::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,40,56,.18),rgba(6,40,56,.38));pointer-events:none}
 .story-text{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:20px;padding:clamp(40px,6vw,110px) clamp(24px,6vw,110px);background:var(--ice);text-align:left}
 .story-text h3{margin:0;color:var(--teal);font:900 clamp(30px,3.6vw,56px)/.98 var(--display);font-stretch:125%;text-transform:uppercase;text-wrap:balance;max-width:14ch}
 .story-text p{margin:0;max-width:46ch;color:var(--teal);font:400 clamp(16px,1.3vw,20px)/1.5 var(--body)}
@@ -304,6 +314,14 @@ footer .credits a:hover{color:var(--ice)}
 .pf-notes{margin:18px 0 0;padding-left:18px;color:#4b5b62;font-size:11px}
 .pf-foot{margin:16px 0 0;font-size:10.5px;color:#7a8a91}
 .pf-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.cta.pp{min-height:52px;padding:0 26px;border:0;background:var(--teal);color:var(--ice);cursor:pointer;font-size:14px}
+.cta.pp:hover{background:#0b4a61}
+.pp-panel{width:min(794px,100%);padding:clamp(18px,4vw,32px);border-radius:24px;background:var(--paper);box-shadow:inset 0 0 0 2px var(--teal);color:var(--teal);display:flex;flex-direction:column;gap:12px}
+.pp-panel h3{margin:0;font:700 16px/1.2 var(--body);letter-spacing:.04em;text-transform:uppercase}
+.pp-sum{margin:0;font:600 15px/1.4 var(--body)}
+.pp-wait{margin:0;opacity:.7}
+.pp-note{margin:0;font:400 12px/1.45 var(--body);opacity:.8}
+.pp-err{margin:0;color:#b42318;font:600 14px/1.4 var(--body)}
 .cta.wa{min-height:52px;padding:0 26px;border:0;background:#1f9d55;color:#fff}
 .cta.wa:hover{background:#178246}
 @media (max-width:560px){.pf-parties{grid-template-columns:1fr}.pf-table th,.pf-table td{padding:8px 6px}.pf-actions{flex-direction:column;align-items:stretch;width:100%}}
@@ -314,7 +332,7 @@ footer .credits a:hover{color:var(--ice)}
   body > *:not(#pf-modal){display:none!important}
   .pf-modal{position:static;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;overflow:visible}
   .pf-scroll{padding:0}
-  .pf-actions{display:none}
+  .pf-actions,.pp-panel{display:none!important}
   .proforma{width:100%;box-shadow:none;border-radius:0;padding:0}
 }
 
@@ -425,12 +443,12 @@ footer .credits a:hover{color:var(--ice)}
         <div class="qrows">
           <div class="qrow passion">
             <span class="swatch" aria-hidden="true"></span>
-            <div class="qname"><b>Passion Fruit</b><small>Lata 330 ml · maracuyá</small></div>
+            <div class="qname"><b>Passion Fruit</b><small>Lata 330 ml · $2,25</small></div>
             <div class="stepper"><button type="button" data-f="passion" data-d="-1" aria-label="Quitar una lata Passion Fruit">−</button><input id="q-passion" type="number" inputmode="numeric" min="0" max="999" value="0" aria-label="Latas Passion Fruit"><button type="button" data-f="passion" data-d="1" aria-label="Agregar una lata Passion Fruit">+</button></div>
           </div>
           <div class="qrow toronja">
             <span class="swatch" aria-hidden="true"></span>
-            <div class="qname"><b>Toronja</b><small>Lata 330 ml · toronja</small></div>
+            <div class="qname"><b>Toronja</b><small>Lata 330 ml · $2,25</small></div>
             <div class="stepper"><button type="button" data-f="toronja" data-d="-1" aria-label="Quitar una lata Toronja">−</button><input id="q-toronja" type="number" inputmode="numeric" min="0" max="999" value="0" aria-label="Latas Toronja"><button type="button" data-f="toronja" data-d="1" aria-label="Agregar una lata Toronja">+</button></div>
           </div>
         </div>
@@ -448,7 +466,7 @@ footer .credits a:hover{color:var(--ice)}
         </div>
         <p class="form-err" id="form-err" role="alert" hidden></p>
         <button class="cta big" id="make-pf" type="submit">Generar proforma</button>
-        <p class="fine">Pedido mínimo 16 latas · Venta solo a mayores de 18 años</p>
+        <p class="fine">$2,25 por lata, IVA incluido · Envío gratis · Pedido mínimo 16 latas · Venta solo a mayores de 18 años</p>
       </form>
     </div>
   </section>
@@ -457,14 +475,19 @@ footer .credits a:hover{color:var(--ice)}
     <div class="story-box">
       <h2 id="t-historia">Nuestra historia</h2>
     </div>
-    <!-- banner a sangre con texto centrado (ref. White Claw "Grab life by the claw"); la foto llega después -->
-    <div class="story-banner">
-      <figure class="photo-slot dark"><span>Foto próximamente</span></figure>
-      <div class="banner-copy"><p>AWAMALA<sup>®</sup></p><strong>Drink smart.</strong></div>
+    <!-- banner a sangre con texto centrado (ref. White Claw "Grab life by the claw") -->
+    <div class="story-banner" id="story-banner">
+      <div class="sb-stage" id="sb-stage">
+        <img class="sb-bg" src="img/historia_banner_fondo.webp" alt="" decoding="async" width="2000" height="1900">
+        <div class="sb-veil" aria-hidden="true"></div>
+        <img class="sb-can" id="sb-can" src="img/historia_lata.webp" alt="" decoding="async" width="1070" height="2845" hidden><!-- lata oculta por ahora -->
+      </div>
+      <div class="banner-copy sb-back" aria-hidden="true"><p>AWAMALA<sup>®</sup></p><strong>Drink smart.</strong></div>
+      <div class="banner-copy sb-front" id="sb-front"><p>AWAMALA<sup>®</sup></p><strong>Drink smart.</strong></div>
     </div>
     <!-- foto | texto, como la sección "Better vibes" de White Claw -->
     <div class="story-split">
-      <figure class="photo-slot"><span>Foto próximamente</span></figure>
+      <figure class="photo-slot has-img"><img src="img/historia_latas.webp" alt="Latas AWAMALA Passion Fruit y Toronja sobre el pajonal" loading="lazy" decoding="async" width="1100" height="1100"></figure>
       <div class="story-text">
         <h3>Lorem ipsum dolor sit amet</h3>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
@@ -475,7 +498,7 @@ footer .credits a:hover{color:var(--ice)}
     </div>
     <!-- texto | foto, como "Drinks like no others" de White Claw -->
     <div class="story-split flip">
-      <figure class="photo-slot"><span>Foto próximamente</span></figure>
+      <figure class="photo-slot has-img"><img src="img/historia_mano.webp" alt="Mano sosteniendo una lata AWAMALA Passion Fruit en el páramo" loading="lazy" decoding="async" width="1300" height="1494" style="object-position:50% 40%"></figure>
       <div class="story-text">
         <h3>Lorem ipsum dolor</h3>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
@@ -509,7 +532,7 @@ footer .credits a:hover{color:var(--ice)}
       </header>
       <p class="pf-addr">ECUADRINKS S.A.S. · Guayaquil, Ecuador · WhatsApp +593 98 402 4742 · @awamala.drinks</p>
       <div class="pf-parties">
-        <div><h3>Proforma para</h3><p id="pf-cliente"></p></div>
+        <div><h3>Proforma para</h3><p id="pf-comprador"></p></div>
         <div><h3>Por</h3><p><b>AWAMALA Hard Seltzer</b><br>Distribuido por ECUADRINKS S.A.S.</p></div>
       </div>
       <table class="pf-table">
@@ -525,26 +548,35 @@ footer .credits a:hover{color:var(--ice)}
         <li>Pedido mínimo: 16 latas.</li>
         <li>Venta exclusiva para mayores de 18 años.</li>
         <li>Proforma sujeta a confirmación de stock por parte de AWAMALA.</li>
-        <li>Costo y fecha de entrega se coordinan por WhatsApp.</li>
+        <li>Envío gratis. La fecha de entrega se coordina por WhatsApp.</li>
       </ol>
       <p class="pf-foot">Bebe con responsabilidad. El consumo excesivo de alcohol perjudica tu salud.</p>
     </article>
     <div class="pf-actions">
+      <button class="cta pp" id="pf-pp" type="button" hidden><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6.5 15h4"/></svg>Pagar con Payphone</button>
       <a class="cta wa" id="pf-wa" href="#" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.5-.3Z"/></svg>Enviar a WhatsApp</a>
       <button class="pill ig" id="pf-pdf" type="button">Descargar PDF</button>
       <button class="pill ig" id="pf-close" type="button">Editar pedido</button>
     </div>
+    <section class="pp-panel" id="pp-panel" hidden aria-labelledby="pp-t">
+      <h3 id="pp-t">Pago con tarjeta · Payphone</h3>
+      <p class="pp-sum" id="pp-sum"></p>
+      <div id="pp-button"><p class="pp-wait">Cargando Payphone…</p></div>
+      <p class="pp-note">Pago seguro procesado por Payphone. El formulario vence en 10 minutos; si vence, vuelve a tocar «Pagar con Payphone».</p>
+    </section>
   </div>
 </div>
 
+<script src="payphone-config.js"></script>
 <script>
 /* ---- pedido → proforma → WhatsApp de AWAMALA ----
-   Ajustar aquí cuando el cliente confirme: precio por lata (USD, sin IVA) y datos de pago. */
+   Ajustar aquí: precio de venta al público por lata (USD, IVA incluido), envío y datos de pago. */
 var AW_PEDIDO = {
   whatsapp: '593984024742',
   minimo: 16,
-  precioLata: null,          /* p. ej. 2.50 · null = "por confirmar" */
-  iva: 0.15,
+  precioLata: 2.25,          /* PVP con IVA incluido · null = "por confirmar" */
+  iva: 0.15,                 /* solo para desglosar el IVA que ya está dentro del PVP */
+  envio: 'Gratis',
   pago: 'Pago por transferencia bancaria. AWAMALA te envía los datos de pago por WhatsApp al confirmar el stock de tu pedido.'
 };
 (function(){
@@ -554,14 +586,15 @@ var AW_PEDIDO = {
   var err = document.getElementById('form-err'), modal = document.getElementById('pf-modal');
   function n(k){ var v = parseInt(q[k].value, 10); return isNaN(v) || v < 0 ? 0 : Math.min(v, 999); }
   function total(){ return n('passion') + n('toronja'); }
-  function money(v){ return '$' + v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function money(v){ var p = v.toFixed(2).split('.'); return '$' + p[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + p[1]; }   /* formato Ecuador: $1.234,50 */
   function update(){
     var t = total(), f = Math.min(1, t / C.minimo);
     fill.style.width = (f * 100) + '%';
     meter.classList.toggle('ok', t >= C.minimo);
-    mtxt.textContent = t >= C.minimo ? t + ' latas · ¡listo para generar tu proforma!'
+    var tot = C.precioLata == null ? '' : ' · ' + money(t * C.precioLata);
+    mtxt.textContent = t >= C.minimo ? t + ' latas' + tot + ' · ¡listo para generar tu proforma!'
       : t === 0 ? 'Pedido mínimo: ' + C.minimo + ' latas.'
-      : t + ' latas · te faltan ' + (C.minimo - t) + ' para el pedido mínimo.';
+      : t + ' latas' + tot + ' · te faltan ' + (C.minimo - t) + ' para el pedido mínimo.';
     if (t >= C.minimo && err.dataset.k === 'min') err.hidden = true;
   }
   document.querySelectorAll('.stepper button').forEach(function(b){
@@ -573,6 +606,43 @@ var AW_PEDIDO = {
   });
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]; }); }
   function pad(x){ return String(x).padStart(2, '0'); }
+  var lastOrder = null;
+
+  /* ---- Payphone (Cajita de Pagos v2.0): se carga solo cuando el comprador toca «Pagar con Payphone» ---- */
+  var ppLoading = null;
+  function loadPayphone(){
+    if (window.PPaymentButtonBox) return Promise.resolve();
+    if (ppLoading) return ppLoading;
+    ppLoading = new Promise(function(ok, fail){
+      var css = document.createElement('link'); css.rel = 'stylesheet'; css.href = 'https://cdn.payphonetodoesposible.com/box/v2.0/payphone-payment-box.css'; document.head.appendChild(css);
+      var js = document.createElement('script'); js.type = 'module'; js.src = 'https://cdn.payphonetodoesposible.com/box/v2.0/payphone-payment-box.js';
+      js.onload = function(){ var t = 0; (function wait(){ if (window.PPaymentButtonBox) ok(); else if (t++ > 50) fail(new Error('sin PPaymentButtonBox')); else setTimeout(wait, 100); })(); };
+      js.onerror = fail; document.head.appendChild(js);
+    });
+    ppLoading.catch(function(){ ppLoading = null; });
+    return ppLoading;
+  }
+  document.getElementById('pf-pp').addEventListener('click', function(){
+    var o = lastOrder, PP = window.AW_PAYPHONE || {}; if (!o || !PP.token) return;
+    var panel = document.getElementById('pp-panel'), box = document.getElementById('pp-button');
+    panel.hidden = false; box.innerHTML = '<p class="pp-wait">Cargando Payphone…</p>';
+    document.getElementById('pp-sum').textContent = o.resumen + ' · Total ' + money(o.cents / 100) + ' (IVA incluido) · Envío gratis';
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    /* montos en centavos: el PVP incluye IVA → base gravada + IVA = total */
+    var conIva = Math.round(o.cents / (1 + C.iva)), tax = o.cents - conIva;
+    var ctx = (o.num + '-' + Math.random().toString(36).slice(2, 7)).toUpperCase();   /* id único por intento (máx. 50) */
+    try { localStorage.setItem('aw-pp-' + ctx, JSON.stringify(o)); } catch (e) {}
+    loadPayphone().then(function(){
+      box.innerHTML = '';
+      var cfg = { token: PP.token, storeId: PP.storeId || undefined, clientTransactionId: ctx,
+        amount: o.cents, amountWithTax: conIva, tax: tax, currency: 'USD', lang: 'es',
+        reference: ('AWAMALA ' + o.num + ' · ' + o.resumen).slice(0, 100) };
+      if (o.ruc && /^\d{10}(\d{3})?$/.test(o.ruc)) { cfg.documentId = o.ruc; cfg.identificationType = o.ruc.length === 13 ? 2 : 1; }
+      new window.PPaymentButtonBox(cfg).render('pp-button');
+    }).catch(function(){
+      box.innerHTML = '<p class="pp-err">No se pudo cargar Payphone. Revisa tu conexión o envía tu pedido por WhatsApp.</p>';
+    });
+  });
 
   document.getElementById('order-form').addEventListener('submit', function(e){
     e.preventDefault();
@@ -587,7 +657,7 @@ var AW_PEDIDO = {
     var fecha = d.toLocaleDateString('es-EC', { day: '2-digit', month: 'long', year: 'numeric' });
     document.getElementById('pf-n').textContent = num;
     document.getElementById('pf-fecha').textContent = fecha;
-    document.getElementById('pf-cliente').innerHTML = '<b>' + esc(nombre) + '</b>' + (ruc ? '<br>C.I./RUC: ' + esc(ruc) : '') + '<br>' + esc(ciudad) + (dir ? '<br>' + esc(dir) : '');
+    document.getElementById('pf-comprador').innerHTML = '<b>' + esc(nombre) + '</b>' + (ruc ? '<br>C.I./RUC: ' + esc(ruc) : '') + '<br>' + esc(ciudad) + (dir ? '<br>' + esc(dir) : '');
 
     var P = C.precioLata, rows = '', sub = 0, lines = [];
     ['passion', 'toronja'].forEach(function(k){
@@ -601,13 +671,21 @@ var AW_PEDIDO = {
     if (P == null){
       tt.innerHTML = '<span>Total de latas</span><span>' + total() + '</span><span class="tot">Total</span><span class="tot">Por confirmar</span>';
     } else {
-      var iva = sub * C.iva;
-      tt.innerHTML = '<span>Total de latas</span><span>' + total() + '</span><span>Subtotal</span><span>' + money(sub) + '</span><span>IVA ' + Math.round(C.iva * 100) + '%</span><span>' + money(iva) + '</span><span class="tot">Total</span><span class="tot">' + money(sub + iva) + '</span>';
+      var base = Math.round(sub / (1 + C.iva) * 100) / 100, iva = sub - base;   /* el PVP ya incluye IVA: se desglosa */
+      tt.innerHTML = '<span>Total de latas</span><span>' + total() + '</span><span>Subtotal sin IVA</span><span>' + money(base) + '</span><span>IVA ' + Math.round(C.iva * 100) + '%</span><span>' + money(iva) + '</span><span>Envío</span><span>' + C.envio + '</span><span class="tot">Total</span><span class="tot">' + money(sub) + '</span>';
     }
-    document.getElementById('pf-pay-txt').textContent = C.pago;
+    var PP = window.AW_PAYPHONE || {}, ppOn = !!(PP.token && P != null);
+    document.getElementById('pf-pay-txt').textContent = ppOn
+      ? 'Paga en línea con tarjeta mediante Payphone, o por transferencia bancaria: AWAMALA te envía los datos por WhatsApp al confirmar el stock.'
+      : C.pago;
+    document.getElementById('pf-pp').hidden = !ppOn;
+    document.getElementById('pp-panel').hidden = true;
+    /* pedido guardado para el pago con Payphone y para la página de respuesta (pago.html) */
+    lastOrder = { num: num, fecha: fecha, nombre: nombre, ciudad: ciudad, ruc: ruc, dir: dir, lines: lines, latas: total(),
+      cents: P == null ? 0 : Math.round(sub * 100), resumen: ['passion', 'toronja'].filter(function(k){ return n(k); }).map(function(k){ return n(k) + ' ' + NAMES[k]; }).join(', ') };
 
     var msg = 'Hola AWAMALA, quiero hacer este pedido.\n\nProforma N.° ' + num + ' (' + fecha + ')\n' + lines.join('\n') +
-      '\nTotal: ' + total() + ' latas' + (P == null ? '' : ' · ' + money(sub * (1 + C.iva)) + ' con IVA') +
+      '\nTotal: ' + total() + ' latas' + (P == null ? '' : ' · ' + money(sub) + ' (IVA incluido)') + '\nEnvío: ' + C.envio.toLowerCase() +
       '\n\nNombre: ' + nombre + (ruc ? '\nC.I./RUC: ' + ruc : '') + '\nCiudad: ' + ciudad + (dir ? '\nDirección: ' + dir : '') +
       '\n\nQuedo atento a la orden de pago.';
     document.getElementById('pf-wa').href = 'https://wa.me/' + C.whatsapp + '?text=' + encodeURIComponent(msg);
@@ -649,6 +727,47 @@ var AW_PEDIDO = {
   document.addEventListener('pointermove',function(e){if(e.target.closest('a,button'))return;var over=inJelly(e.clientX,e.clientY);if(over)document.body.style.cursor='pointer';else if(document.body.style.cursor==='pointer')document.body.style.cursor='';},{passive:true});
   document.getElementById('jelly-btn').addEventListener('click',swim);
   fill('mq2',['PASSION FRUIT','TORONJA','5% ALC.','CERO AZÚCAR','330 ML','DRINK SMART'],['#0f5f7c']);
+})();
+</script>
+<script>
+/* banner "DRINK SMART.": la lata empieza arriba, al centro y por delante del texto;
+   al bajar vuelve a su lugar en la foto y el texto pasa al frente (final = foto original) */
+(function(){
+  var ban = document.getElementById('story-banner'); if (!ban || ban.hidden) return;
+  var ANIMAR = false;   /* animación de la lata pausada por ahora: el banner se muestra fijo en su estado final. Poner true para reactivarla */
+  var stage = document.getElementById('sb-stage'), can = document.getElementById('sb-can'), front = document.getElementById('sb-front');
+  var IW = 2000, IH = 1900, CAN_TOP = 1030, CAN_CX = 785, BIG = 1.8;   /* medidas del fondo y de la lata dentro de él (px de la imagen); BIG = tamaño inicial */
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var Wb = 0, Hb = 0, s = 1, offX = 0, offY = 0, dy0 = 0, dxc = 0, fy = 0.64, raf = 0;
+  function clamp(v, a, b){ return Math.min(b, Math.max(a, v)); }
+  function layout(){
+    Wb = ban.clientWidth; Hb = ban.clientHeight;
+    s = Math.max(Wb / IW, Hb / IH);
+    var sw = IW * s, sh = IH * s;
+    fy = Wb <= 760 ? 0.56 : 0.64;                                 /* la tapa queda justo bajo "SMART." */
+    offY = clamp(fy * Hb - CAN_TOP * s, Hb - sh, 0);
+    offX = clamp(Wb / 2 - CAN_CX * s, Wb - sw, 0);
+    stage.style.width = sw + 'px'; stage.style.height = sh + 'px';
+    stage.style.left = offX + 'px'; stage.style.top = offY + 'px';   /* sin transform: así el texto puede quedar entre el fondo y la lata */
+    dxc = Wb / 2 - (offX + CAN_CX * s);                              /* corrimiento fijo para que quede al centro (no cambia al bajar) */
+    dy0 = (0.1 - fy) * Hb;                                           /* arranca con la tapa al 10% del banner; baja en vertical */
+    update();
+  }
+  function ease(t){ return t * t * (3 - 2 * t); }
+  function update(){
+    raf = 0;
+    var p = 1;
+    if (ANIMAR && !reduce) { var r = ban.getBoundingClientRect(), vh = innerHeight; p = clamp((vh * 0.55 - r.top) / (vh * 0.5), 0, 1);   /* 0 con el banner a media pantalla → 1 cuando llega arriba */ }
+    var e = ease(p), k = 1 - e;
+    can.style.transform = 'translate3d(' + dxc.toFixed(1) + 'px,' + (dy0 * k).toFixed(1) + 'px,0) scale(' + (1 + (BIG - 1) * k).toFixed(4) + ')';   /* grande adelante → tamaño real al esconderse */
+    front.style.setProperty('--front', ease(clamp((p - 0.4) / 0.5, 0, 1)).toFixed(3));
+  }
+  function req(){ if (!raf) raf = requestAnimationFrame(update); }
+  var rz = 0;
+  addEventListener('resize', function(){ if (!rz) rz = requestAnimationFrame(function(){ rz = 0; layout(); }); });
+  addEventListener('scroll', req, { passive: true });
+  if (can.complete) layout(); else can.addEventListener('load', layout);
+  layout();
 })();
 </script>
 <script>

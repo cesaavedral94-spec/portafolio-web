@@ -372,6 +372,7 @@
 
   .link-row{ display:flex; flex-wrap:wrap; gap:10px; margin:20px 0 4px; }
   .win-embed{ display:block; width:100%; aspect-ratio:16/10; border:1px solid var(--hairline); border-radius:9px; background:#d4d4d4; margin:0 0 22px; }
+  .win-desc-block{ margin-top:24px; }
   .win-embed-scaled{ position:relative; overflow:hidden; background:#0b0b14; }
   .win-embed-scaled iframe{ position:absolute; left:0; top:0; border:0; transform-origin:0 0; }
   .pill-link{
@@ -704,12 +705,11 @@ function openProject(i){
       ${p.embed ? (p.embedW
         ? `<div class="win-embed win-embed-scaled" style="aspect-ratio:${p.embedW}/${p.embedH}"><iframe src="${p.embed}" title="${p.name}" style="width:${p.embedW}px;height:${p.embedH}px" allowfullscreen></iframe></div>`
         : `<iframe class="win-embed" src="${p.embed}" title="${p.name}" loading="lazy" allowfullscreen></iframe>`) : ''}
-      ${descHtml}
+      ${p.images && p.images.length ? '<div class="gal-slot"></div>' : ''}
       ${linksHtml}
-      ${p.images && p.images.length ? `<hr class="div">
-      <p class="win-eyebrow">Galería</p>` : ''}
+      ${descHtml ? `<div class="win-desc-block">${descHtml}</div>` : ''}
     `;
-    if(p.images && p.images.length) winBody.appendChild(buildGallery(p.images));
+    if(p.images && p.images.length) winBody.querySelector('.gal-slot').replaceWith(buildGallery(p.images));
     const emb = winBody.querySelector('.win-embed-scaled');
     if(emb){
       const fr = emb.querySelector('iframe');

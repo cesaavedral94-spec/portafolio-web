@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="referrer" content="origin-when-cross-origin">
+<meta name="robots" content="noindex">
+<title>Pago · AWAMALA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,900&family=Poppins:wght@300;400;500;600;700&display=swap">
+<style>
+/* Página de respuesta de Payphone: confirma el pago (obligatorio, < 5 min) y manda el comprobante a WhatsApp */
+:root{--bg:#dceeff;--ice:#eef8ff;--teal:#0f5f7c;--ok:#0b6b46;--bad:#b42318;--display:'Archivo','Arial Black',sans-serif;--body:'Poppins','Helvetica Neue',Arial,sans-serif;color-scheme:light}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--teal);font:400 16px/1.5 var(--body);-webkit-font-smoothing:antialiased;display:grid;place-items:center;min-height:100svh;padding:24px 16px calc(24px + env(safe-area-inset-bottom,0px))}
+.card{position:relative;overflow:hidden;width:min(560px,100%);padding:clamp(26px,6vw,44px);border-radius:36px;background:var(--ice);box-shadow:inset 0 0 0 2px var(--teal),0 30px 80px rgba(15,95,124,.16);display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
+.bg{position:absolute;right:-18%;bottom:-14%;width:80%;opacity:.08;transform:rotate(-12deg);pointer-events:none}
+.card > *:not(.bg){position:relative}
+.logo b{display:block;font:900 clamp(30px,8vw,44px)/.9 var(--display);font-stretch:125%}
+.logo i{display:block;margin-top:6px;font:300 12px/1 var(--body);font-style:normal;letter-spacing:.6em;padding-left:.6em}
+.icon{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:var(--teal);color:var(--ice)}
+.ok .icon{background:var(--ok)}
+.bad .icon{background:var(--bad)}
+h1{margin:0;font:700 clamp(22px,5vw,28px)/1.2 var(--body)}
+p{margin:0;max-width:40ch}
+dl{width:100%;margin:6px 0 0;display:grid;grid-template-columns:auto 1fr;gap:6px 16px;text-align:left;padding:14px 16px;border-radius:16px;background:#fff;font-size:14px}
+dt{color:#4b5b62}
+dd{margin:0;text-align:right;font-weight:600;color:#1d2a30;word-break:break-word}
+.actions{display:flex;flex-direction:column;gap:10px;width:100%;margin-top:6px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 24px;border-radius:1600px;font:700 14px/1 var(--body);letter-spacing:.04em;text-transform:uppercase;text-decoration:none;border:0;cursor:pointer}
+.btn.wa{background:#1f9d55;color:#fff}
+.btn.wa:hover{background:#178246}
+.btn.ghost{background:var(--ice);color:var(--teal);box-shadow:inset 0 0 0 2px var(--teal)}
+.btn.ghost:hover{background:var(--teal);color:var(--ice)}
+.small{font-size:12px;opacity:.8}
+.spin{width:40px;height:40px;border-radius:50%;border:4px solid rgba(15,95,124,.2);border-top-color:var(--teal);animation:sp 0.9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:3s}}
+</style>
+</head>
+<body>
+<main class="card" id="card" aria-live="polite">
+  <img class="bg" src="img/medusa_azul.webp" alt="">
+  <div class="logo" aria-label="AWAMALA Hard Seltzer"><b>AWAMALA</b><i>HARD SELTZER</i></div>
+  <div class="spin" id="spin" aria-hidden="true"></div>
+  <h1 id="title">Confirmando tu pago…</h1>
+  <p id="msg">No cierres esta página.</p>
+  <dl id="data" hidden></dl>
+  <div class="actions" id="actions" hidden></div>
+</main>
+
+<script src="payphone-config.js"></script>
+<script>
+(function(){
+  var WA = '593984024742';
+  var card = document.getElementById('card'), title = document.getElementById('title'), msg = document.getElementById('msg');
+  var dl = document.getElementById('data'), actions = document.getElementById('actions'), spin = document.getElementById('spin');
+  var q = new URLSearchParams(location.search), id = q.get('id'), ctx = q.get('clientTransactionId');
+  var PP = window.AW_PAYPHONE || {};
+  var order = null; try { order = JSON.parse(localStorage.getItem('aw-pp-' + ctx) || 'null'); } catch (e) {}
+
+  function money(c){ var p = (c / 100).toFixed(2).split('.'); return '$' + p[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + p[1]; }
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]; }); }
+  function icon(kind){
+    var path = kind === 'ok' ? '<path d="M6 12.5l4 4 8-9"/>' : '<path d="M7 7l10 10M17 7L7 17"/>';
+    spin.outerHTML = '<div class="icon" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' + path + '</svg></div>';
+  }
+  function rows(list){ dl.innerHTML = list.filter(function(r){ return r[1]; }).map(function(r){ return '<dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd>'; }).join(''); dl.hidden = false; }
+  function waLink(text){ return 'https://wa.me/' + WA + '?text=' + encodeURIComponent(text); }
+  function orderText(){
+    if (!order) return 'Referencia: ' + ctx;
+    return 'Proforma N.° ' + order.num + ' (' + order.fecha + ')\n' + order.lines.join('\n') + '\nTotal: ' + order.latas + ' latas · ' + money(order.cents) + ' (IVA incluido)\nEnvío: gratis' +
+      '\n\nNombre: ' + order.nombre + (order.ruc ? '\nC.I./RUC: ' + order.ruc : '') + '\nCiudad: ' + order.ciudad + (order.dir ? '\nDirección: ' + order.dir : '');
+  }
+  function show(kind, h, p, list, btns){
+    card.classList.add(kind); icon(kind); title.textContent = h; msg.textContent = p;
+    if (list) rows(list);
+    actions.innerHTML = btns; actions.hidden = false;
+  }
+
+  function render(r){
+    if (r && r.statusCode === 3) {
+      var amt = money(r.amount);
+      var paidDiff = order && order.cents !== r.amount;   /* aviso para AWAMALA si el monto no coincide con la proforma */
+      var text = 'Hola AWAMALA, ya pagué mi pedido con Payphone.\n\n' + orderText() +
+        '\n\nPago aprobado: ' + amt + '\nAutorización: ' + r.authorizationCode + '\nTransacción: ' + r.transactionId + (paidDiff ? '\n⚠️ El monto pagado no coincide con la proforma.' : '');
+      show('ok', '¡Pago aprobado!', 'Envía el comprobante a AWAMALA por WhatsApp para coordinar la entrega.',
+        [['Proforma', order && order.num], ['Monto', amt], ['Autorización', r.authorizationCode], ['Transacción', String(r.transactionId)], ['Tarjeta', r.cardBrand ? r.cardBrand + ' ···· ' + (r.lastDigits || '') : '']],
+        '<a class="btn wa" href="' + waLink(text) + '" target="_blank" rel="noopener">Enviar comprobante por WhatsApp</a><a class="btn ghost" href="./">Volver a AWAMALA</a>');
+      try { localStorage.removeItem('aw-pp-' + ctx); } catch (e) {}
+    } else if (r && r.statusCode === 2) {
+      show('bad', 'Pago cancelado', 'No se realizó ningún cobro. Puedes intentarlo de nuevo o enviar tu pedido por WhatsApp.', null,
+        '<a class="btn ghost" href="./#pedido">Volver al pedido</a><a class="btn wa" href="' + waLink('Hola AWAMALA, quiero hacer este pedido.\n\n' + orderText() + '\n\nIntenté pagar con Payphone y no se completó.') + '" target="_blank" rel="noopener">Enviar pedido por WhatsApp</a>');
+    } else {
+      fail(r && (r.message || r.errorCode) ? 'Payphone respondió: ' + String(r.message || r.errorCode).replace(/\.?$/, '.') : 'No pudimos confirmar el pago.');
+    }
+  }
+  function fail(why){
+    show('bad', 'No pudimos confirmar tu pago', why + ' Si se te hizo un cargo, escríbenos con la referencia y lo revisamos.',
+      [['Referencia', ctx], ['Id Payphone', id]],
+      '<a class="btn wa" href="' + waLink('Hola AWAMALA, tuve un problema al pagar con Payphone.\n\nReferencia: ' + ctx + '\nId: ' + id + (order ? '\n\n' + orderText() : '')) + '" target="_blank" rel="noopener">Escribir a AWAMALA</a><a class="btn ghost" href="./#pedido">Volver al pedido</a>');
+  }
+
+  if (!id || !ctx) { fail('Faltan los datos de la transacción.'); return; }
+  if (!PP.token) { fail('El pago con Payphone aún no está configurado.'); return; }
+
+  /* si la página se recarga no se vuelve a confirmar: se muestra el resultado guardado */
+  var cached = null; try { cached = JSON.parse(sessionStorage.getItem('aw-pp-res-' + ctx) || 'null'); } catch (e) {}
+  if (cached) { render(cached); return; }
+
+  /* confirmación obligatoria: si no se hace en 5 minutos, Payphone reversa el pago */
+  fetch('https://paymentbox.payphonetodoesposible.com/api/confirm', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + PP.token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: Number(id), clientTxId: ctx })
+  }).then(function(res){ return res.json(); }).then(function(r){
+    if (r && (r.statusCode === 2 || r.statusCode === 3)) { try { sessionStorage.setItem('aw-pp-res-' + ctx, JSON.stringify(r)); } catch (e) {} }
+    render(r);
+  }).catch(function(){ fail('Revisa tu conexión y recarga esta página (tienes 5 minutos).'); });
+})();
+</script>
+</body>
+</html>
